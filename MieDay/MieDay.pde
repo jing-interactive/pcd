@@ -47,8 +47,9 @@ void draw()
   {
   case intro:
     {
+      fill(0);
       text("B-Day gift 2010 for MieMie", 40, screenHeight/2-100);
-      text("by vinjn", 40, screenHeight/2+100);
+      text("by vinjn", 200, screenHeight/2+100);
       if (millis() - Millis > 3000)
         status = gaming;
     }
@@ -60,6 +61,8 @@ void draw()
     break;
   }
 }
+
+int falling_counter = 0;
 
 void gaming()
 {
@@ -81,9 +84,18 @@ void gaming()
       mx[which] = mie.pos.x+mie.w/2-18;
       my[which] = mie.pos.y+mie.h-26;
       tex = ">_<";
+
+      falling_counter++;
+      if (falling_counter > 30)
+      { 
+        audio_play(0, false);
+        audio_play(1, true);
+      //  println("ddd");
+      }
     }
     else
     {
+      falling_counter = 0;
       mx[which] = mie.pos.x+mie.w/2-18;
       my[which] = mie.pos.y+mie.h+26;
       tex = "*_*";

@@ -49,7 +49,7 @@ class Mie
   void jump()
   {
     vel.y = spd_y;
-    audio_play();
+    audio_play(0,true);
   }
 
   void reset()
