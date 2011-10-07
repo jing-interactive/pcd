@@ -49,6 +49,7 @@ class Mie
   void jump()
   {
     vel.y = spd_y;
+    audio_play();
   }
 
   void reset()
@@ -61,7 +62,7 @@ class Mie
 
   void draw()
   {
-    float acc_x = map(acc_values[0], 3, -3, 0, screenWidth);
+    float acc_x = map(ax, 3, -3, 0, screenWidth);
     pos.x += (acc_x - pos.x)*0.15;
 
     float d = world_bottom - pos.y;
