@@ -108,21 +108,23 @@ void draw()
 
   //[update & draw snake's head]
   //acc
-  if (vel.x == 0)
+  if (false)
   {
+    if (vel.x == 0)
+    {
       if (ax < -1.0)
         vel.set(s, 0, 0);
       else if (ax > 1.0)
         vel.set(-s, 0, 0);
-  }
-  else if (vel.y == 0)
-  {
+    }
+    else if (vel.y == 0)
+    {
       if (ay < -1.0)
         vel.set(0, -s, 0);
       else if (ay > 1.0)
         vel.set(0, s, 0);
+    }
   }
-  
   head.add(vel);
   if (head.x > width) head.x -= width;
   else if (head.x < 0) head.x += width;
@@ -184,3 +186,4 @@ public void accelerationEvent(float x, float y, float z) {
   ay = y;
   az = z;
 }
+
