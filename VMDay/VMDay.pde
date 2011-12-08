@@ -42,7 +42,7 @@ void setup()
   for (int i=0;i<7;i++)
     pic_list.add(new Love());
 
-  phrase_v = new Phrase("Melanie, I am collecting every love message in the air, just for you~", "vinjn");
+  phrase_v = new Phrase("Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");
   phrase_v.clr = color(0, 0, 0);
 }
 
@@ -129,15 +129,20 @@ boolean contains_mid(int mid)
 
 void parseVMXML()
 {
-  parseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name=VM%E5%A4%A7%E5%A9%9A", vm_list);
+  parseXML("VM%E5%A4%A7%E5%A9%9A", vm_list);
 }
 
 void parseLoveXML()
 {
-  parseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name=爱你", love_list);
+  parseXML("爱你", love_list);
 }
 
-void parseXML(String input, ArrayList list)
+void parseXML(String query, ArrayList list)
+{
+ doParseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name="+query, list); 
+}
+
+void doParseXML(String input, ArrayList list)
 {  
   list.clear();
   XMLElement xml = new XMLElement(this, input); 
@@ -154,13 +159,14 @@ void parseXML(String input, ArrayList list)
     {//check duplicates
       // mid_map.put(mid,0);
       //println(phrase);
-      String txt = phrase.getChild("text").getContent(); 
+      String text = phrase.getChild("text").getContent(); 
       XMLElement user = phrase.getChild("user");
-      String name = user.getChild("screen_name").getContent();
+      String screen_name = user.getChild("screen_name").getContent();
+      String profile_image_url = user.getChild("profile_image_url").getContent();
       //println(name);
       //String icon = user.getChild("profile_image_url").getContent();
       //PImage i = loadImage(icon);
-      list.add(new Phrase(txt, name));
+      list.add(new Phrase(text, screen_name, profile_image_url));
     }
   }
   xmlLoading = false;
@@ -169,15 +175,18 @@ void parseXML(String input, ArrayList list)
 class Phrase 
 {
   String txt;
-  String name; 
+  String user;
+  PImage icon;
   int id;
   color clr;
 
-  Phrase(String _txt, String _name)
+  Phrase(String _txt, String _name, String icon_url)
   {
     txt = _txt;
-    name = _name;
+    user = _name;
     clr = color(random(200), random(200), random(200));
+    if (icon_url != null)
+      icon = loadImage(icon_url);
   }
 
   void draw(float id)
@@ -187,7 +196,7 @@ class Phrase
     float y = id*phrase_height+20;
     // translate(x,y);
     fill(clr);
-    text(name+":", x+0, y+0);	
+    text(user+":", x+0, y+0);	
     fill(100, 100, 200);  
     text(txt, x+50, y+20);
     // popMatrix();
