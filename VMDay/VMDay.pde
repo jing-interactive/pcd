@@ -35,7 +35,7 @@ void setup()
   text("Loading", width/2, height/2);
 
   font_normal = createFont("msyh", 32); 
-//  font_title = createFont("msyh", 32);
+  //  font_title = createFont("msyh", 32);
 
   mid_map.put("3369607813924731", 0);//ignore the bitch -____-
 
@@ -139,19 +139,21 @@ void parseLoveXML()
 
 void parseXML(String query, ArrayList list)
 {
- doParseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name="+query, list); 
+  doParseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name="+query, list);
 }
 
 void doParseXML(String input, ArrayList list)
 {  
   list.clear();
-  XMLElement xml = new XMLElement(this, input); 
-  // println(xml);
+  // XMLElement xml = new XMLElement(this, input); 
+  XML xml = loadXML(input);
+  //println(xml);
 
   int n_xml = xml.getChildCount();
   for (int i = 0; i< n_xml; i++)
   {
-    XMLElement phrase = xml.getChild(i); 
+    XML phrase = xml.getChild(i);
+    println(phrase);
     String mid = phrase.getChild("id").getContent(); 
     println(mid);
     // println(contains_mid(mid));
@@ -160,7 +162,7 @@ void doParseXML(String input, ArrayList list)
       // mid_map.put(mid,0);
       //println(phrase);
       String text = phrase.getChild("text").getContent(); 
-      XMLElement user = phrase.getChild("user");
+      XML user = phrase.getChild("user");
       String screen_name = user.getChild("screen_name").getContent();
       String profile_image_url = user.getChild("profile_image_url").getContent();
       //println(name);
@@ -186,7 +188,7 @@ class Phrase
     user = _name;
     clr = color(random(200), random(200), random(200));
     if (icon_url != null)
-      icon = loadImage(icon_url);
+      icon = loadImage(icon_url, "jpg");
   }
 
   void draw(float id)
@@ -194,6 +196,7 @@ class Phrase
     // pushMatrix();
     float x = -width*0.3+noise(id+frameCount*0.001)*width;
     float y = id*phrase_height+20;
+    image(icon, x, y);
     // translate(x,y);
     fill(clr);
     text(user+":", x+0, y+0);	
