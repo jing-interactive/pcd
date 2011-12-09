@@ -1,9 +1,30 @@
+class Profile
+{
+  Profile(String name, String icon_url)
+  {
+    name_ = name;
+    post_ = 1;
+    if (icon_url != null)
+    {
+      small_ = loadImage(icon_url, "jpg");
+      PImage_resize(small_, 0.6);
+      String big_url = icon_url.replaceAll("\\/50\\/", "/180/");
+      big_ = loadImage(big_url, "jpg");
+    }
+  }
+
+  color clr_ = color(random(200), random(200), random(200));
+  String name_;
+  PImage small_, big_;
+  int post_;
+}
+HashMap<String, Profile> g_profiles = new HashMap<String, Profile>();
+
 class FeedUpdater extends Thread
 {
   String query_; 
   HashMap<String, Phrase> msgs_ = new HashMap<String, Phrase>();
   float millis = -1000000;//to enable first crawl
-  //HashMap<String,int> postCounts = new HashMap<String ,int>();
 
   FeedUpdater(String query)
   {
@@ -80,8 +101,7 @@ class FeedUpdater extends Thread
           if (!msgs_.containsKey(key))
           {
             if (debug_feed)
-              println(p.id+":"+p.user);
-
+              println(p.id+":"+p.profile_.name_);
             msgs_.put(key, p);
           }
         }
@@ -89,7 +109,11 @@ class FeedUpdater extends Thread
       }
       else
       {
-        //   sleep(1000);
+        try {        
+          sleep(1000);
+        }
+        catch (Exception e) {
+        }
       }
     }
   }

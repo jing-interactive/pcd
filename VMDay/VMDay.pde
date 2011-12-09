@@ -22,7 +22,6 @@ PImage love_png;
 PImage title_png;
 PImage line_png;
 
-int phrase_height = 35;
 PFont font_normal;
 color bgCol = #fff1c3;
 
@@ -52,11 +51,10 @@ void setup()
 
   //mid_map.put("3369607813924731", 0);//ignore the bitch -____-
 
-  for (int i=0;i<7;i++)
+  for (int i=0;i<n_love_png;i++)
     pic_list.add(new Love());
 
-  phrase_v = new Phrase("xxxx", "Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");
-  phrase_v.clr = color(0, 0, 0);
+  phrase_v = new Phrase("19861209", "Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");;
 }
 
 final int spa = 12;
@@ -118,4 +116,3 @@ void draw()
     }
   }
 }
-

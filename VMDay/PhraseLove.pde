@@ -1,3 +1,6 @@
+//parameters
+final int phrase_height = 45;
+final int n_love_png = 5;
 
 class Love
 {
@@ -29,22 +32,33 @@ class Love
 
 class Phrase 
 {
+  String id;//id of this phrase
   String text;
-  String user;
-  PImage small,big;
-  String id;
-  color clr;
+  Profile profile_;//who sent it
 
-  Phrase(String _id, String _txt, String _name, String icon_url)
+  Phrase(String _id, String _txt, String name, String icon_url)
   {
     id = _id;
-    text = _txt;
-    user = _name;
-    clr = color(random(200), random(200), random(200));
-    if (icon_url != null)
+    //just part of text
+    int idx = _txt.indexOf("//", 60);
+    if (idx != -1)
+      text = _txt.substring(0, idx); 
+    else
+      text = _txt;
+    if (textWidth(text) > width*0.8)
     {
-      small = loadImage(icon_url, "jpg");
-      PImage_resize(small, 0.6);
+      //      println(text.length() + ":"+text);
+    }
+
+    if (g_profiles.containsKey(name) )
+    {
+      profile_ = g_profiles.get(name);
+      profile_.post_ ++;
+    }
+    else
+    {
+      profile_ = new Profile(name, icon_url);
+      g_profiles.put(name, profile_);
     }
   }
 
@@ -59,13 +73,13 @@ class Phrase
   void draw(float idx)
   {
     // pushMatrix();
-    float x = -width*0.3+noise(idx+frameCount*0.001)*width;
+    float x = noise(idx+frameCount*0.001)*width/4;
     float y = idx*phrase_height+20;
-    image(small, x, y);
+    image(profile_.small_, x-10, y+7);
     // translate(x,y);
-    fill(clr);
-    text(user+":", x+0, y+0);	
-    fill(100, 100, 200);  
+    fill(profile_.clr_);
+    text(profile_.name_+":", x+10, y+0);	
+    fill(20, 20, 20,240);  
     text(text, x+50, y+20);
     // popMatrix();
   }
