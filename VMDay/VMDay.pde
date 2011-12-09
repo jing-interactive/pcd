@@ -1,11 +1,21 @@
-Preloader preloader;
 boolean xmlLoading = true;
-ArrayList vm_list = new ArrayList();//#VM大婚#
-ArrayList love_list = new ArrayList();//#爱你#
+
+Object[] vm_list = null;
+Object[] love_list = null;
+
 Phrase phrase_v;
 final int n_visible_vm = 5;//for rendering
 final int n_visible_love = 5;
-HashMap mid_map = new HashMap();//whether it is already inside
+
+void PImage_resize(PImage img, float s)
+{
+  PImage_resize(img, s, s);
+}
+
+void PImage_resize(PImage img, float sx, float sy)
+{
+  img.resize(int(img.width*sx), int(img.height*sy));
+}
 
 ArrayList<Love> pic_list = new ArrayList<Love>();//a lot of love!
 PImage love_png;
@@ -19,14 +29,17 @@ color bgCol = #fff1c3;
 final int Width = 1024;
 final int Height = 768;
 
+FeedUpdater thread_love = new FeedUpdater("爱你");
+FeedUpdater thread_vm = new FeedUpdater("VM%E5%A4%A7%E5%A9%9A");
+
 void setup()
 {
   love_png = loadImage("love.png");
   title_png = loadImage("title.png");
-  line_png = loadImage("lines.png"); 
-  preloader = new Preloader();
-  parseVMXML(); 
-  parseLoveXML();
+  line_png = loadImage("lines.png");
+
+  thread_vm.start();
+  thread_love.start();
 
   background(bgCol); 
   fill(0);
@@ -37,41 +50,13 @@ void setup()
   font_normal = createFont("msyh", 32); 
   //  font_title = createFont("msyh", 32);
 
-  mid_map.put("3369607813924731", 0);//ignore the bitch -____-
+  //mid_map.put("3369607813924731", 0);//ignore the bitch -____-
 
   for (int i=0;i<7;i++)
     pic_list.add(new Love());
 
-  phrase_v = new Phrase("Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");
+  phrase_v = new Phrase("xxxx", "Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");
   phrase_v.clr = color(0, 0, 0);
-}
-
-class Love
-{
-  float   love_x = random(100, width-100);
-  float   love_y = random(100, height-100);
-  float fade_counter = 0;
-  float speed = random(0.5, 1.5);
-  float deg = random(0, 3.14);
-
-  void draw()
-  {
-    // pushMatrix();
-    fade_counter = fade_counter+speed;
-    if (fade_counter > 100 && abs(sin(fade_counter*0.03)) < 0.01)
-    {
-      fade_counter = 0;
-      love_x = random(100, width-100);
-      love_y = random(100, height-100);
-      deg = random(0, 3.14);
-    }
-    tint(255, 10+abs(sin(fade_counter*0.03))*100);
-    // translate(love_x,love_y);
-    // rotate(deg);
-    image(love_png, love_x, love_y);
-    noTint();
-    // popMatrix();
-  }
 }
 
 final int spa = 12;
@@ -86,162 +71,51 @@ void draw()
   stroke(200, 0, 0, 50);
   rect(0, 0, width, height);
   strokeWeight(1);
-  if (xmlLoading) 
+
+  for (int i=0;i<pic_list.size();i++)
   {
-    preloader.animate();
+    pic_list.get(i).draw();
   }
-  else
-  { 
-    for (int i=0;i<pic_list.size();i++)
+  textAlign(LEFT);
+  textFont(font_normal, 18);
+  translate(0, height*0.2-15);
+
+  if (thread_vm.isDataUpdated())
+  {
+    vm_list = thread_vm.getData();
+  }
+  if (vm_list != null)
+  {
+    for (int i=0;i<min(n_visible_vm, vm_list.length);i++)
     {
-      pic_list.get(i).draw();
-    }  
-    textAlign(LEFT);
-    textFont(font_normal, 18);
-    translate(0, height*0.2-15);
-    for (int i=0;i<min(n_visible_vm, vm_list.size());i++)
-    {
-      Phrase msg = (Phrase) vm_list.get(i);
+      Phrase msg = (Phrase)vm_list[i];
       msg.draw(i);
     }
     phrase_v.draw(n_visible_vm+0.37);
 
-    pushMatrix();
-    translate(0, height*0.43+15);
-    strokeWeight(10);
-    noFill();
-    stroke(200, 0, 0, 50);
-    float h = -52;
-    image(line_png, spa+width/2, h);     
-    for (int i=0;i<min(n_visible_love,love_list.size());i++)
+    if (debug_main)
     {
-      Phrase msg = (Phrase) love_list.get(i);
+      for (Object o: vm_list)
+      {
+        Phrase p = (Phrase)o;
+        println(p.text);
+      }
+    }
+  }
+
+  draw_seperator();
+
+  if (thread_love.isDataUpdated())
+  {
+    love_list = thread_love.getData();
+  }
+  if (love_list != null)
+  {
+    for (int i=0;i<min(n_visible_love, love_list.length);i++)
+    {
+      Phrase msg = (Phrase)love_list[i];
       msg.draw(i);
     }
-    popMatrix();
-  }
-}
-
-boolean contains_mid(int mid)
-{
-  return mid_map.containsKey(mid);
-}
-
-void parseVMXML()
-{
-  parseXML("VM%E5%A4%A7%E5%A9%9A", vm_list);
-}
-
-void parseLoveXML()
-{
-  parseXML("爱你", love_list);
-}
-
-void parseXML(String query, ArrayList list)
-{
-  doParseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name="+query, list);
-}
-
-void doParseXML(String input, ArrayList list)
-{  
-  list.clear();
-  // XMLElement xml = new XMLElement(this, input); 
-  XML xml = loadXML(input);
-  //println(xml);
-
-  int n_xml = xml.getChildCount();
-  for (int i = 0; i< n_xml; i++)
-  {
-    XML phrase = xml.getChild(i);
-    println(phrase);
-    String mid = phrase.getChild("id").getContent(); 
-    println(mid);
-    // println(contains_mid(mid));
-    if (!mid.equals("3369607813924731"))
-    {//check duplicates
-      // mid_map.put(mid,0);
-      //println(phrase);
-      String text = phrase.getChild("text").getContent(); 
-      XML user = phrase.getChild("user");
-      String screen_name = user.getChild("screen_name").getContent();
-      String profile_image_url = user.getChild("profile_image_url").getContent();
-      //println(name);
-      //String icon = user.getChild("profile_image_url").getContent();
-      //PImage i = loadImage(icon);
-      list.add(new Phrase(text, screen_name, profile_image_url));
-    }
-  }
-  xmlLoading = false;
-}
-
-class Phrase 
-{
-  String txt;
-  String user;
-  PImage icon;
-  int id;
-  color clr;
-
-  Phrase(String _txt, String _name, String icon_url)
-  {
-    txt = _txt;
-    user = _name;
-    clr = color(random(200), random(200), random(200));
-    if (icon_url != null)
-      icon = loadImage(icon_url, "jpg");
-  }
-
-  void draw(float id)
-  {
-    // pushMatrix();
-    float x = -width*0.3+noise(id+frameCount*0.001)*width;
-    float y = id*phrase_height+20;
-    image(icon, x, y);
-    // translate(x,y);
-    fill(clr);
-    text(user+":", x+0, y+0);	
-    fill(100, 100, 200);  
-    text(txt, x+50, y+20);
-    // popMatrix();
-  }
-}
-
-class Preloader
-{
-  int numSpokes = 8;  
-  float rot = 360/numSpokes;
-  float totalRot = 0;
-  int interval = 15;
-  int counter = 0;
-
-  Preloader()
-  {
-    noStroke();
-  }
-
-  void animate()
-  { 
-    if (interval==counter)
-    {
-      counter=0;
-      totalRot+=360/numSpokes;
-    }
-    else
-    {
-      counter++;
-    }
-    pushMatrix();
-
-    translate(width/2, height/2);    
-    rotate(radians(totalRot));
-    for (int i = 0 ; i<numSpokes;  i++)
-    {
-      rotate(radians(360/numSpokes));
-      fill(0, 0, 0, 10*i + 20);
-      ellipse(-2, 10, 5, 5);
-      //rect(-2, 7, 4, 10);
-    }
-    popMatrix();
   }
 }
 
