@@ -1,8 +1,12 @@
 boolean xmlLoading = true;
 
-Object[] vm_list = null;
-Object[] love_list = null;
-
+ArrayList<Phrase> vm_list = null;
+ArrayList<Phrase> love_list = null;
+int vm_index = 0;
+int love_index = 0;
+int vm_update_millis = millis();
+int love_update_millis = millis();
+final int update_for_msg = 5000;//update every 5 seconds
 Phrase phrase_v;
 final int n_visible_vm = 5;//for rendering
 final int n_visible_love = 5;
@@ -20,6 +24,7 @@ void PImage_resize(PImage img, float sx, float sy)
 ArrayList<Love> pic_list = new ArrayList<Love>();//a lot of love!
 PImage love_png;
 PImage title_png;
+
 PImage line_png;
 
 PFont font_normal;
@@ -28,7 +33,7 @@ color bgCol = #fff1c3;
 final int Width = 1024;
 final int Height = 768;
 
-FeedUpdater thread_love = new FeedUpdater("爱你");
+FeedUpdater thread_love = new FeedUpdater("我爱你loveyou");
 FeedUpdater thread_vm = new FeedUpdater("VM%E5%A4%A7%E5%A9%9A");
 
 void setup()
@@ -54,7 +59,7 @@ void setup()
   for (int i=0;i<n_love_png;i++)
     pic_list.add(new Love());
 
-  phrase_v = new Phrase("19861209", "Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");;
+  phrase_v = new Phrase("19861209", "Melanie, I am collecting every love message in the air, just for you~", "vinjn", "http://tp3.sinaimg.cn/1455173150/50/1295153611/1");
 }
 
 final int spa = 12;
@@ -69,50 +74,24 @@ void draw()
   stroke(200, 0, 0, 50);
   rect(0, 0, width, height);
   strokeWeight(1);
-
   for (int i=0;i<pic_list.size();i++)
   {
     pic_list.get(i).draw();
   }
-  textAlign(LEFT);
-  textFont(font_normal, 18);
-  translate(0, height*0.2-15);
 
-  if (thread_vm.isDataUpdated())
-  {
-    vm_list = thread_vm.getData();
-  }
-  if (vm_list != null)
-  {
-    for (int i=0;i<min(n_visible_vm, vm_list.length);i++)
-    {
-      Phrase msg = (Phrase)vm_list[i];
-      msg.draw(i);
-    }
-    phrase_v.draw(n_visible_vm+0.37);
+  FSM_draw();
 
-    if (debug_main)
-    {
-      for (Object o: vm_list)
-      {
-        Phrase p = (Phrase)o;
-        println(p.text);
-      }
-    }
-  }
-
-  draw_seperator();
-
-  if (thread_love.isDataUpdated())
+  switch (app_mode)
   {
-    love_list = thread_love.getData();
-  }
-  if (love_list != null)
-  {
-    for (int i=0;i<min(n_visible_love, love_list.length);i++)
-    {
-      Phrase msg = (Phrase)love_list[i];
-      msg.draw(i);
-    }
+  case wall_mode:
+    wall_mode();
+    break;
+  case award_mode:
+    award_mode();
+    break;
+  default:
+    wall_mode();
+    break;
   }
 }
+

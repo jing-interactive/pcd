@@ -1,7 +1,23 @@
 final int no_data = 0;
 final int new_msg_mode = 1;
 final int idle_mode = 2;
+final int wall_mode = 3;
+final int award_mode = 4;
 
-int vm_mode = no_data;
-int love_mode = no_data;
+int app_mode = wall_mode;
+
+void FSM_draw()
+{
+  if (keyPressed)
+  {
+    if (key ==' ')
+    {
+      app_mode = award_mode;
+    }
+    else
+    {
+      app_mode = wall_mode;
+    }
+  }
+}
 

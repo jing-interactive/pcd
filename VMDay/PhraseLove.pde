@@ -87,7 +87,7 @@ class Phrase
 
 void draw_seperator()
 {
-  translate(0, height*0.43+15);
+  translate(0, height*0.43-50);
   strokeWeight(10);
   noFill();
   stroke(200, 0, 0, 50);

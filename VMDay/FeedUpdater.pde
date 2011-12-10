@@ -1,3 +1,5 @@
+final int refresh_time_count = 30*1000;//refresh every 30 seconds
+
 class Profile
 {
   Profile(String name, String icon_url)
@@ -18,7 +20,7 @@ class Profile
   PImage small_, big_;
   int post_;
 }
-HashMap<String, Profile> g_profiles = new HashMap<String, Profile>();
+HashMap<String, Profile> profiles = new HashMap<String, Profile>();
 
 class FeedUpdater extends Thread
 {
@@ -38,13 +40,20 @@ class FeedUpdater extends Thread
     return dataChanged;
   }
 
-  Object[] getData()
+  ArrayList<Phrase> getData()
   {
     //lock msgs_
     dataChanged = false;
     // ArrayList<Phrase> ret = new ArrayList<Phrase>();
-    Object[] ret = msgs_.values().toArray();
+    Object[] arr = msgs_.values().toArray();
+    println(msgs_.size());
 
+    ArrayList<Phrase> ret = new ArrayList<Phrase>(arr.length);
+    println(arr.length);
+    for (int i=arr.length-1;i>0;i--)
+    {
+      ret.add((Phrase)arr[i]);
+    }
     //unlock msgs_; 
     return ret;
   }
@@ -58,6 +67,8 @@ class FeedUpdater extends Thread
   {  
     list.clear();
     XML xml = loadXML(input);
+    if (xml == null)
+      return;
 
     int n_xml = xml.getChildCount();
     for (int i = 0; i< n_xml; i++)
@@ -77,8 +88,6 @@ class FeedUpdater extends Thread
         String screen_name = user.getChild("screen_name").getContent();
         String profile_image_url = user.getChild("profile_image_url").getContent();
         list.add(new Phrase(mid, text, screen_name, profile_image_url));
-
-        dataChanged = true;
       }
     }
     xmlLoading = false;
@@ -89,7 +98,7 @@ class FeedUpdater extends Thread
     ArrayList<Phrase> list = new ArrayList<Phrase>();
     while (true)
     {
-      if (millis() - millis > 10*1000)
+      if (millis() - millis > refresh_time_count)
       {
         millis = millis() ;
         println("运行线程:"+query_);
@@ -98,11 +107,12 @@ class FeedUpdater extends Thread
         for (Phrase p : list)
         {
           String key = p.id+"";
-          if (!msgs_.containsKey(key))
+          //          if (!msgs_.containsKey(key))
           {
             if (debug_feed)
               println(p.id+":"+p.profile_.name_);
             msgs_.put(key, p);
+            dataChanged = true;
           }
         }
         //unlock
