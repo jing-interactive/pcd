@@ -9,6 +9,7 @@ class Love
   float fade_counter = 0;
   float speed = random(0.5, 1.5);
   float deg = random(0, 3.14);
+  float dy = random(0.1,0.3);
 
   void draw()
   {
@@ -20,7 +21,9 @@ class Love
       love_x = random(100, width-100);
       love_y = random(100, height-100);
       deg = random(0, 3.14);
+      dy = random(0.1,0.3);
     }
+    love_y -= dy;
     tint(255, 10+abs(sin(fade_counter*0.03))*100);
     // translate(love_x,love_y);
     // rotate(deg);
@@ -40,7 +43,7 @@ class Phrase
   {
     id = _id;
     //just part of text
-    int idx = _txt.indexOf("//", 60);
+    int idx = _txt.indexOf("//", 40);
     if (idx != -1)
       text = _txt.substring(0, idx); 
     else
@@ -87,11 +90,10 @@ class Phrase
 
 void draw_seperator()
 {
-  translate(0, height*0.43-50);
   strokeWeight(10);
   noFill();
   stroke(200, 0, 0, 50);
-  float h = -52;
+  float h = -45;
   image(line_png, spa+width/2, h);
 }
 

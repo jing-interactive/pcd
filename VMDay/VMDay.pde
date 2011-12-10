@@ -33,7 +33,7 @@ color bgCol = #fff1c3;
 final int Width = 1024;
 final int Height = 768;
 
-FeedUpdater thread_love = new FeedUpdater("我爱你loveyou");
+FeedUpdater thread_love = new FeedUpdater("%E7%88%B1%E4%BD%A0");
 FeedUpdater thread_vm = new FeedUpdater("VM%E5%A4%A7%E5%A9%9A");
 
 void setup()
@@ -63,11 +63,13 @@ void setup()
 }
 
 final int spa = 12;
+int millis = millis();
 
 void draw()
 {
   background(bgCol);
   image(title_png, width/2, title_png.height/2+10);
+  millis = millis();
 
   strokeWeight(10);
   noFill();
@@ -94,4 +96,3 @@ void draw()
     break;
   }
 }
-

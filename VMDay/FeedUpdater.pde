@@ -1,4 +1,13 @@
 final int refresh_time_count = 30*1000;//refresh every 30 seconds
+String[] fake_names = 
+{
+//  "vinjn", 
+  "巧克力雨", 
+  "avant-Contra", 
+  "hxflyer", 
+  "小竹竺君", 
+//  "melanievinjn"
+};
 
 class Profile
 {
@@ -20,13 +29,13 @@ class Profile
   PImage small_, big_;
   int post_;
 }
-HashMap<String, Profile> profiles = new HashMap<String, Profile>();
+HashMap<String, Profile> g_profiles = new HashMap<String, Profile>();
 
 class FeedUpdater extends Thread
 {
-  String query_; 
+  String query_;
   HashMap<String, Phrase> msgs_ = new HashMap<String, Phrase>();
-  float millis = -1000000;//to enable first crawl
+  float mls = -1000000;//to enable first crawl
 
   FeedUpdater(String query)
   {
@@ -50,7 +59,7 @@ class FeedUpdater extends Thread
 
     ArrayList<Phrase> ret = new ArrayList<Phrase>(arr.length);
     println(arr.length);
-    for (int i=arr.length-1;i>0;i--)
+    for (int i=arr.length-1;i>=0;i--)
     {
       ret.add((Phrase)arr[i]);
     }
@@ -60,7 +69,8 @@ class FeedUpdater extends Thread
 
   void parseXML(String query, ArrayList list)
   {
-    doParseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name="+query, list);
+    doParseXML("http://api.t.sina.com.cn/statuses/search.xml?source=3709681010&q="+query, list);
+    //doParseXML("http://api.t.sina.com.cn/trends/statuses.xml?source=3709681010&trend_name="+query, list);
   }
 
   void doParseXML(String input, ArrayList list)
@@ -70,6 +80,11 @@ class FeedUpdater extends Thread
     if (xml == null)
       return;
 
+    XML searchResult = xml.getChild(0);
+    if (searchResult != null)
+      xml = searchResult;
+    else
+      return;
     int n_xml = xml.getChildCount();
     for (int i = 0; i< n_xml; i++)
     {
@@ -83,9 +98,26 @@ class FeedUpdater extends Thread
 
       if (!mid.equals("3369607813924731") && !msgs_.containsKey(mid))
       {//check duplicates
-        String text = phrase.getChild("text").getContent(); 
         XML user = phrase.getChild("user");
         String screen_name = user.getChild("screen_name").getContent();
+
+        boolean skip = false;
+        if (no_vinjn)
+        {
+          for (String name : fake_names)
+          {
+            if (screen_name.equals(name))
+            {
+              skip = true;
+              break;
+            }
+          }
+        }
+        
+        if (skip)
+          continue;
+
+        String text = phrase.getChild("text").getContent(); 
         String profile_image_url = user.getChild("profile_image_url").getContent();
         list.add(new Phrase(mid, text, screen_name, profile_image_url));
       }
@@ -98,9 +130,9 @@ class FeedUpdater extends Thread
     ArrayList<Phrase> list = new ArrayList<Phrase>();
     while (true)
     {
-      if (millis() - millis > refresh_time_count)
+      if (millis() - mls > refresh_time_count)
       {
-        millis = millis() ;
+        mls = millis() ;
         println("运行线程:"+query_);
         parseXML(query_, list);
         //lock

@@ -12,11 +12,11 @@ void FSM_draw()
   {
     if (key ==' ')
     {
-      app_mode = award_mode;
+      award_setup();
     }
     else
     {
-      app_mode = wall_mode;
+      wall_setup();
     }
   }
 }

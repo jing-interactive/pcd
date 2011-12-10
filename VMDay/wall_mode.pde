@@ -1,13 +1,18 @@
 //微博墙的显示
 
-void wall_mode()
+void wall_setup()
 {
-  int millis = millis();
-  
+
+  app_mode = wall_mode;
+}
+
+void wall_mode()
+{  
   textAlign(LEFT);
   textFont(font_normal, 18);
-  translate(0, height*0.2-15);
 
+  //绘制VM
+  translate(0, height*0.2-15);
   if (thread_vm.isDataUpdated())
   {
     vm_list = thread_vm.getData();
@@ -20,14 +25,13 @@ void wall_mode()
     {
       vm_index = (vm_index+5)%(vm_list.size());
       vm_update_millis = millis;
-    }
+    } 
     for (int i=0;i<n_visible_vm;i++)
     {
       int idx = (vm_index+i)%vm_list.size();
       Phrase msg = vm_list.get(idx);
       msg.draw(i);
     }
-    phrase_v.draw(n_visible_vm+0.37);
 
     if (debug_main)
     {
@@ -39,8 +43,12 @@ void wall_mode()
     }
   }
 
+  //分割线
+  phrase_v.draw(n_visible_vm+0.37);
+  translate(0, height*0.43-50);
   draw_seperator();
 
+  //绘制love
   if (thread_love.isDataUpdated())
   {
     love_index = 0;    
@@ -58,7 +66,7 @@ void wall_mode()
     {
       int idx = (love_index+i)%love_list.size();
       Phrase msg = love_list.get(idx);
-      msg.draw(i);
+      msg.draw(i+0.1);
     }
   }
 }
