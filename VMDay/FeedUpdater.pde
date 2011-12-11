@@ -1,31 +1,48 @@
 final int refresh_time_count = 30*1000;//refresh every 30 seconds
-String[] fake_names = 
-{
-//  "vinjn", 
-  "巧克力雨", 
-  "avant-Contra", 
-  "hxflyer", 
-  "小竹竺君", 
-//  "melanievinjn"
-};
+final String delim = "<|>";
+
 
 class Profile
 {
-  Profile(String name, String icon_url)
-  {
+  void setup(String name, String icon_url)
+  { 
     name_ = name;
     post_ = 1;
-    if (icon_url != null)
+    icon_url_ = icon_url;
+    if (icon_url_ != null)
     {
       small_ = loadImage(icon_url, "jpg");
+      if (small_ == null)
+        small_ = default_small;
       PImage_resize(small_, 0.6);
       String big_url = icon_url.replaceAll("\\/50\\/", "/180/");
       big_ = loadImage(big_url, "jpg");
+      if (big_ == null)
+        big_ = default_big;
     }
   }
 
+  Profile(String name, String icon_url)
+  {
+    setup(name, icon_url);
+  }
+
+  Profile(String fromString)
+  {
+    String[] list = split(fromString, delim);
+    name_ = list[0];
+    icon_url_ = list[1];
+    post_ = int(list[2]);
+    setup(name_, icon_url_);
+  }
+
+  String toString()
+  {
+    return name_+delim+icon_url_+delim+post_;
+  }
+
   color clr_ = color(random(200), random(200), random(200));
-  String name_;
+  String name_, icon_url_;
   PImage small_, big_;
   int post_;
 }
@@ -104,7 +121,7 @@ class FeedUpdater extends Thread
         boolean skip = false;
         if (no_vinjn)
         {
-          for (String name : fake_names)
+          for (String name : skip_names)
           {
             if (screen_name.equals(name))
             {
@@ -113,7 +130,7 @@ class FeedUpdater extends Thread
             }
           }
         }
-        
+
         if (skip)
           continue;
 

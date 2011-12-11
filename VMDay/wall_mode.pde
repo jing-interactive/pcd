@@ -2,7 +2,6 @@
 
 void wall_setup()
 {
-
   app_mode = wall_mode;
 }
 
@@ -15,6 +14,7 @@ void wall_mode()
   translate(0, height*0.2-15);
   if (thread_vm.isDataUpdated())
   {
+    save();
     vm_list = thread_vm.getData();
     vm_index = 0;
     vm_update_millis = millis();
@@ -70,4 +70,3 @@ void wall_mode()
     }
   }
 }
-

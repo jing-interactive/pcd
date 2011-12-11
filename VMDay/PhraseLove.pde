@@ -9,7 +9,7 @@ class Love
   float fade_counter = 0;
   float speed = random(0.5, 1.5);
   float deg = random(0, 3.14);
-  float dy = random(0.1,0.3);
+  float dy = random(0.1, 0.3);
 
   void draw()
   {
@@ -21,7 +21,7 @@ class Love
       love_x = random(100, width-100);
       love_y = random(100, height-100);
       deg = random(0, 3.14);
-      dy = random(0.1,0.3);
+      dy = random(0.1, 0.3);
     }
     love_y -= dy;
     tint(255, 10+abs(sin(fade_counter*0.03))*100);
@@ -39,19 +39,15 @@ class Phrase
   String text;
   Profile profile_;//who sent it
 
-  Phrase(String _id, String _txt, String name, String icon_url)
+  void setup(String _id, String _txt, String name, String icon_url)
   {
-    id = _id;
+    id = _id; 
     //just part of text
     int idx = _txt.indexOf("//", 40);
     if (idx != -1)
       text = _txt.substring(0, idx); 
     else
       text = _txt;
-    if (textWidth(text) > width*0.8)
-    {
-      //      println(text.length() + ":"+text);
-    }
 
     if (g_profiles.containsKey(name) )
     {
@@ -64,13 +60,24 @@ class Phrase
       g_profiles.put(name, profile_);
     }
   }
-
-  void enter()
+  Phrase(String _id, String _txt, String name, String icon_url)
   {
+    setup(_id, _txt, name, icon_url);
   }
 
-  void leave()
+  String toString()
   {
+    return id+delim+text+delim+profile_.name_+delim+profile_.icon_url_;
+  }
+
+  Phrase(String fromString)
+  {
+    String[] list = split(fromString, delim);
+    id = list[0];
+    text = list[1];
+    String name = list[2];
+    String icon_url = list[3];
+    setup(id, text, name, icon_url);
   }
 
   void draw(float idx)
@@ -82,7 +89,7 @@ class Phrase
     // translate(x,y);
     fill(profile_.clr_);
     text(profile_.name_+":", x+10, y+0);	
-    fill(20, 20, 20,240);  
+    fill(20, 20, 20, 240);  
     text(text, x+50, y+20);
     // popMatrix();
   }

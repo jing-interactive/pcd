@@ -11,6 +11,8 @@ Phrase phrase_v;
 final int n_visible_vm = 5;//for rendering
 final int n_visible_love = 5;
 
+PImage default_small, default_big;
+
 void PImage_resize(PImage img, float s)
 {
   PImage_resize(img, s, s);
@@ -41,6 +43,11 @@ void setup()
   love_png = loadImage("love.png");
   title_png = loadImage("title.png");
   line_png = loadImage("lines.png");
+
+  default_small = loadImage("small.gif");
+  default_big = loadImage("big.gif"); 
+
+  load();
 
   thread_vm.start();
   thread_love.start();
@@ -96,3 +103,4 @@ void draw()
     break;
   }
 }
+
