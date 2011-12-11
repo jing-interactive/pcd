@@ -41,7 +41,7 @@ class Profile
     return name_+delim+icon_url_+delim+post_;
   }
 
-  color clr_ = color(random(200), random(200), random(200));
+  color clr_ = color(random(30,150), random(30,150), random(30,150));
   String name_, icon_url_;
   PImage small_, big_;
   int post_;
