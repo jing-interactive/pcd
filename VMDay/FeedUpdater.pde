@@ -113,13 +113,13 @@ class FeedUpdater extends Thread
       if (debug_feed) 
         println(mid);
 
-      if (!mid.equals("3369607813924731") && !msgs_.containsKey(mid))
+      if (!msgs_.containsKey(mid))
       {//check duplicates
         XML user = phrase.getChild("user");
         String screen_name = user.getChild("screen_name").getContent();
 
         boolean skip = false;
-        if (no_vinjn)
+        if (exclude_skip_names)
         {
           for (String name : skip_names)
           {

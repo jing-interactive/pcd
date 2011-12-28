@@ -48,6 +48,7 @@ void setup()
   default_big = loadImage("big.gif"); 
 
   load();
+  noCursor();
 
   thread_vm.start();
   thread_love.start();
