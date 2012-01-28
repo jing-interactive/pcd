@@ -98,7 +98,7 @@ void way0()
         if (n_hits >= 100)
          win_setup();
       }
-      d = min(d, 15); 
+      d = min(d, 30)*0.1; 
       jiba_x = 435+d;
       jiba_y = 370+d;
       jiba_deg = -PI/4;
@@ -109,7 +109,7 @@ void way0()
 
   if (cut_it == way0_state || get_it == way0_state)
   {
-    text("# "+(10-n_hits), 00, 100);
+    text("# "+(10-n_hits), 100, 100);
     pushMatrix();
     translate(jiba_x, jiba_y);
     rotate(jiba_deg);
@@ -128,6 +128,7 @@ void way0()
     fill(255,0,0,55+h*200);
     rect(10, height-80, h*(width-40), 30);
     popStyle();
+    
     pushMatrix();
     translate(jiba_x, jiba_y);
     rotate(jiba_deg);
@@ -137,4 +138,3 @@ void way0()
     image(stand_suck, 398, 430);
   }
 }
-

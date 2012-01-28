@@ -10,7 +10,7 @@ void setup()
   imageMode(CENTER);
   PFont font = loadFont("MicrosoftTaiLe-Bold-32.vlw");
   textFont(font);
-
+  
   menu_setup();
 }
 

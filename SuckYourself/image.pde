@@ -4,6 +4,8 @@ PImage bg;
 PImage spirit_sheet, stand, stand_suck;
 PImage raw_jiba, jiba1, jiba2;
 PImage dark;
+final int n_suck_anims = 8;
+PImage suck_ani[] = new PImage[n_suck_anims];
 
 void PImageResize(PImage in, float kx, float ky)
 {
@@ -39,5 +41,12 @@ void image_setup()
   PImageResize(jiba2, 0.1);
   jiba2.filter(DILATE);
   jiba2.filter(BLUR);
+
+  //anim
+  for (int i=0;i<n_suck_anims;i++)
+  {
+    suck_ani[i] = loadImage("suck_"+i+".png");
+    PImageResize(suck_ani[i],0.7);
+  }
 }
 

@@ -12,22 +12,22 @@ void menu()
   rotate(-frameCount*0.05);
   image(our, 0, 0);
   popMatrix();
-  
+
   bg = menu0;
-    
+
   if (mouseX > 607 && mouseX < 680)
   {
     if (mouseY > 267 && mouseY < 374)
     {
-        bg = menu1;
+      bg = menu2;
     }
     else 
       if (mouseY > 418 && mouseY < 525)
     {
-      bg = menu2;
+      bg = menu1;
     }
   }
- 
+
   if (mousePressed == true)
   {
     if (bg == menu1)

@@ -12,7 +12,7 @@ void win_setup()
 
 void win()
 {
-  if (getElapsed() > 5000)
+  if (getElapsed() > 4000)
   {
     menu_setup();
     return;
