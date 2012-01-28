@@ -12,6 +12,7 @@ void way0_setup()
   n_hits = 0;
   state = way0;
   bg = room;
+  textAlign(LEFT);
 }
 
 final String[] missions = {
@@ -19,7 +20,7 @@ final String[] missions = {
 };
 
 void way0()
-{
+{  
   text(missions[way0_state], 50, 50);
 
   if (mousePressed)
@@ -81,24 +82,34 @@ void way0()
 
         if (n_hits == 10)
         {
+          minim_play(got);
           way0_state = suck_it;
+          n_hits = 0;
         }
       }
     }
     break;
   case  suck_it:
     {
-      jiba_x = 440;
-      jiba_y = 373;
+      float d = sqrt(sq(mouseX-pmouseX)+sq(mouseY-pmouseY));
+      if (d > 100)
+      {
+        n_hits++;
+        if (n_hits >= 100)
+         win_setup();
+      }
+      d = min(d, 15); 
+      jiba_x = 435+d;
+      jiba_y = 370+d;
       jiba_deg = -PI/4;
       //if mosue
     }
     break;
-  }
-  text("# "+(10-n_hits), 100, 100);
+  }  
 
   if (cut_it == way0_state || get_it == way0_state)
   {
+    text("# "+(10-n_hits), 00, 100);
     pushMatrix();
     translate(jiba_x, jiba_y);
     rotate(jiba_deg);
@@ -110,6 +121,13 @@ void way0()
 
   if (suck_it == way0_state)
   {
+    //    text("# "+n_hits, 100, 100);
+    float h = n_hits*0.01;
+    pushStyle();
+    noStroke();
+    fill(255,0,0,55+h*200);
+    rect(10, height-80, h*(width-40), 30);
+    popStyle();
     pushMatrix();
     translate(jiba_x, jiba_y);
     rotate(jiba_deg);

@@ -2,7 +2,7 @@ import ddf.minim.*;
 
 Minim minim;
 AudioInput in;
-AudioPlayer shout, hit;
+AudioPlayer shout, hit, got, high;
 
 void minim_setup()
 {
@@ -16,6 +16,8 @@ void minim_setup()
   shout = minim.loadFile("shout.wav", 2048);
 //  shout.setGain(15.0);
   hit = minim.loadFile("hit.wav", 2048);
+  got = minim.loadFile("got.wav", 2048);
+  high = minim.loadFile("high.wav", 2048);
 //  hit.setGain(-15.0);
 }
 

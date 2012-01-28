@@ -5,18 +5,22 @@ void setup()
 {
   size(W, H, P2D);
   image_setup();
+  minim_setup();
+
   imageMode(CENTER);
-  way0_setup();
   PFont font = loadFont("MicrosoftTaiLe-Bold-32.vlw");
   textFont(font);
-  minim_setup();
+
+  menu_setup();
 }
 
 void draw()
 { 
   println(mouseX+","+mouseY);
   background(155);
-  image(bg, width/2, height/2);
+  if (bg != null)
+    image(bg, width/2, height/2);
+    
   millis = millis();
   switch (state)
   {

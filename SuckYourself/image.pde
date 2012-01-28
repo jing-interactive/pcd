@@ -3,6 +3,7 @@ PImage room, field;
 PImage bg;
 PImage spirit_sheet, stand, stand_suck;
 PImage raw_jiba, jiba1, jiba2;
+PImage dark;
 
 void PImageResize(PImage in, float kx, float ky)
 {
@@ -29,7 +30,7 @@ void image_setup()
   stand_suck = spirit_sheet.get(586, 22, 229-43, 318-43);
 
   raw_jiba = loadImage("Jiba.png");
-  jiba1 = raw_jiba.get(200, 137, 193, 389);
+  jiba1 = raw_jiba.get(200, 137, 193, 399);
   PImageResize(jiba1, 0.1);
   jiba1.filter(DILATE);
   jiba1.filter(BLUR);
