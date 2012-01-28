@@ -3,27 +3,20 @@ final int H = 600;
 
 void setup()
 {
-  size(W, H,P2D);
+  size(W, H, P2D);
   image_setup();
   imageMode(CENTER);
-  menu_setup();
-}
-
-int millis = 0;
-int lastMillis = 0;
-void setTimer()
-{
-  lastMillis = millis();
-}
-int getElasped()
-{
-  return millis() - lastMillis;
+  way0_setup();
+  PFont font = loadFont("MicrosoftTaiLe-Bold-32.vlw");
+  textFont(font);
+  minim_setup();
 }
 
 void draw()
 { 
+  println(mouseX+","+mouseY);
   background(155);
-  image(bg,width/2,height/2);
+  image(bg, width/2, height/2);
   millis = millis();
   switch (state)
   {
@@ -55,5 +48,34 @@ void draw()
   default:
     break;
   }
+}
+
+
+int millis = 0;
+int lastMillis = 0;
+
+void setTimer()
+{
+  lastMillis = millis();
+}
+
+int getElapsed()
+{
+  return millis() - lastMillis;
+}
+
+boolean isPointInside(float px, float py, float x1, float y1, float x2, float y2)
+{
+  return px > x1 && px<x2 && py > y1 && py < y2;
+}
+
+boolean isMouseInside(float x1, float y1, float x2, float y2)
+{
+  return isPointInside(mouseX, mouseY, x1, y1, x2, y2);
+}
+
+boolean isMouseInside(float x1, float y1, float r)
+{
+  return dist( mouseX, mouseY, x1, y1) < r;
 }
 

@@ -1,6 +1,8 @@
-PImage menu0,menu1,menu2,our;
-PImage room,field;
+PImage menu0, menu1, menu2, our;
+PImage room, field;
 PImage bg;
+PImage spirit_sheet, stand, stand_suck;
+PImage raw_jiba, jiba1, jiba2;
 
 void PImageResize(PImage in, float kx, float ky)
 {
@@ -17,9 +19,24 @@ void image_setup()
   menu0 = loadImage("menu0.png");
   menu1 = loadImage("menu1.png");
   menu2 = loadImage("menu2.png");
-  room = loadImage("room.png");
-  field = loadImage("field.png");
-  
   our = loadImage("Ouroboros.preview.png");
   PImageResize(our, 0.3);
+
+  room = loadImage("room.png");
+  field = loadImage("field.png");  
+  spirit_sheet = loadImage("jibajiang_2.png");
+  stand = spirit_sheet.get(43, 43, 229-43, 318-43);
+  stand_suck = spirit_sheet.get(586, 22, 229-43, 318-43);
+
+  raw_jiba = loadImage("Jiba.png");
+  jiba1 = raw_jiba.get(200, 137, 193, 389);
+  PImageResize(jiba1, 0.1);
+  jiba1.filter(DILATE);
+  jiba1.filter(BLUR);
+
+  jiba2 = raw_jiba.get(475, 271, 257, 240);
+  PImageResize(jiba2, 0.1);
+  jiba2.filter(DILATE);
+  jiba2.filter(BLUR);
 }
+
