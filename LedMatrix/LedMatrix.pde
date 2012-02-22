@@ -15,10 +15,14 @@ void setup()
 //  gui_setup();
   noStroke();
   led_setup();
+  spark_setup();
+  kinect_setup();
 }
 
+float millis = 0;
 void draw()
 {
+  millis = millis();
   hint(ENABLE_DEPTH_TEST);
   pushMatrix();
   background(0, 100, 0);

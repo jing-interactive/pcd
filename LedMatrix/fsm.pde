@@ -4,6 +4,7 @@ final int cross_solid = 3;
 final int cross_wireframe = 4;
 final int diamond_solid = 5;
 final int diamond_wireframe = 6;
+final int idle_random = 7;
 
 int mode = sphere_solid;
 
@@ -12,20 +13,31 @@ void fsm()
   if (keyPressed)
   {
     int k = key -'0';
-    if (k >=sphere_solid && k<=diamond_wireframe)
+    if (k >=sphere_solid && k<=idle_random)
       mode = k;
   }
+  led_clear();
 
-  wave_mode();
+  if (mode <idle_random)
+  {
+    wave_mode();
+  }
+  else
+  {
+    spark();
+    // led_blur();
+  }
 }
+
+final float ddd = 3;
 
 float satisfy_me(PVector center, PVector pos)
 {
   PVector delta = PVector.sub(pos, center);
   if (delta.z < 0)
     return -1;
-  
-  delta.z /= 2;
+
+  delta.z *= 0.3;
   boolean sat = false;//是否满足要求
   float k = -1;
   float dz = 4;
@@ -35,23 +47,23 @@ float satisfy_me(PVector center, PVector pos)
   {
   case  sphere_solid:
     {
-      sat = r < 4;
+      sat = r < ddd;
     }
     break;
   case  sphere_wireframe:
     {     
-      sat = r < 4 && r>3;
+      sat = r < ddd && r>ddd-1;
     }
     break;
   case  cross_solid:
     {
-       dz = 2;
+      dz = ddd/2;
       sat = delta.z <= dz && (abs(delta.x) <=1 || abs(delta.y) <=1);
     }
     break;
   case  cross_wireframe:
     {
-      dz = 4;
+      dz = ddd;
       sat =  delta.z <= dz && (abs(delta.x) <=1 || abs(delta.y) <=1);
     }
     break;
