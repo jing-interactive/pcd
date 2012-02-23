@@ -20,6 +20,7 @@ void fsm()
 
   if (mode <idle_random)
   {
+    millisLastKinectData = millis;
     wave_mode();
   }
   else
