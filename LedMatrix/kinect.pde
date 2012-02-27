@@ -56,7 +56,7 @@ void kinect_draw()
     kinect_data = false;
     //    mode = sphere_solid;
     millisLastKinectData = millis;
-    target_z = map(blobs[0].z, 800, 3000, Z-1, 0);
+    target_z = map(blobs[0].z, 800, 3000, 3, Z-1);
     target_x = blobs[0].x;
     target_y = blobs[0].y;
     println(blobs[0].z+","+target_z);

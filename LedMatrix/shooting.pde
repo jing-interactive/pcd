@@ -11,7 +11,7 @@ class Line
     come = true;
     speed = random(0.7, 1);
     decay = random(0.65, 0.8);
-    visible = random(10) > 2 ? true : false;
+    visible = random(10) > 0 ? true : false;
   }
   void update()
   {
@@ -53,11 +53,17 @@ void shooting_reset()
 void shooting()
 {
   led_reset();
+  int x_start = (int)map(the_x, 0, 1, 1, W-2);
   for (int x=0;x<W;x++)
   {
     for (int y=0;y<H;y++)
     {
       int idx = index(x, y);
+      if (x >= x_start-1 && x <x_start+2)
+        lines[idx].visible = true;
+      else
+        lines[idx].visible = false;
+
       lines[idx].update();
       if (!lines[idx].visible)
         continue;
