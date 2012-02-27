@@ -12,7 +12,12 @@ int index(int x, int y, int z)
   return z*(W*H)+y*W+x;
 }
 
-void led_clear()
+int index(int x, int y)
+{
+  return y*W+x;
+}
+
+void led_reset()
 {
   for (int i=0;i<TOTAL;i++)
     leds[i].clr = color(255, 0, 89, 5);

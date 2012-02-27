@@ -16,13 +16,13 @@ class Spark
       setup();
     else
     {
-      k = map(k, 0, 1, 0, 250);
+      k = map(k*k, 0, 1, 0, 250);
       leds[idx].clr = color(196, 88, 89, k);
     }
   }
 }
 
-final int n_sparks = 30;
+final int n_sparks = 60;
 Spark[] sparks = new Spark[n_sparks];
 
 void spark_setup()
@@ -30,6 +30,15 @@ void spark_setup()
   for (int i=0;i<n_sparks;i++)
   {
     sparks[i] = new Spark();
+    sparks[i].setup();
+  }
+}
+
+void spark_reset()
+{  
+  mode = spark;
+  for (int i=0;i<n_sparks;i++)
+  {
     sparks[i].setup();
   }
 }

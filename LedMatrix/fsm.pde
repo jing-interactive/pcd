@@ -4,29 +4,59 @@ final int cross_solid = 3;
 final int cross_wireframe = 4;
 final int diamond_solid = 5;
 final int diamond_wireframe = 6;
-final int idle_random = 7;
+final int spark = 7;
+final int shooting = 8;//流星
 
-int mode = sphere_solid;
+int mode = shooting;
 
 void fsm()
 {
   if (keyPressed)
   {
     int k = key -'0';
-    if (k >=sphere_solid && k<=idle_random)
-      mode = k;
+    switch (k)
+    {
+    case sphere_solid:
+    case sphere_wireframe:
+    case cross_solid:
+    case cross_wireframe:
+    case diamond_solid:
+    case diamond_wireframe:
+      {
+        mode = k;
+        wave_setup();
+        break;
+      }
+    case spark:
+      {  
+        spark_reset();
+        break;
+      }
+    case shooting:
+      {
+        shooting_reset();
+        break;
+      }
+    default:
+      break;
+    }
   }
-  led_clear();
+  led_reset();
 
-  if (mode <idle_random)
+  kinect_draw();
+
+  if (mode <spark)
   {
-    millisLastKinectData = millis;
-    wave_mode();
+  //  millisLastKinectData = millis;
+    wave();
+  }
+  else if (mode == spark)
+  {
+    spark();
   }
   else
   {
-    spark();
-    // led_blur();
+    shooting();
   }
 }
 

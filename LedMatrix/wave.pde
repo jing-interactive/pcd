@@ -1,10 +1,3 @@
-void wave_setup()
-{
-  //  mode = wave_mode;
-  for (int z=0;z<Z;z++)
-    radiuses[z] = 0;
-}
-
 color randomColor(int x, int y, int z)
 { 
   int c = int(MAX_INT*noise(x*0.1+y*0.01+z*0.001));
@@ -12,7 +5,7 @@ color randomColor(int x, int y, int z)
 }
 
 //float smooth[][] = new float[W][H];
-float target_z = Z*2;
+float target_z = Z;
 float curr_z = 0;
 float the_x = 0.45;
 float the_y = 0.45;
@@ -20,32 +13,24 @@ float target_x = 0.45;
 float target_y = 0.45;
 
 float millisLastKinectData = 0;//to turn to idle mode
-float millisLostConnection = 5000;//5 seconds without kinect data turn app to idle mode
+final float millisLostConnection = 5000;//5 seconds without kinect data turn app to idle mode
 
-void wave_mode()
+void wave_setup()
 {
-  //  if (isNewKinectData())
-  if (kinect_data)
-  {
-    println("ddd");
-    mode = sphere_solid;
-    millisLastKinectData = millis;
-    target_z = map(blobs[0].z, 800, 3000, Z-1, 0);
-    target_x = blobs[0].x;
-    target_y = blobs[0].y;
-    //    println(blobs[0].z+","+target_z);
-  }
-  else
-  {
-    if (millis - millisLastKinectData > millisLostConnection)
-      mode = idle_random;
-    if (curr_z > Z-1 ) curr_z = -5;
-    else if (curr_z < -6 ) curr_z = Z-1;
-  }
-  curr_z = lerp(curr_z, target_z, 0.05);
-  the_x = lerp(the_x, target_x, 0.05);
-  the_y = lerp(the_y, target_y, 0.05);
+  for (int z=0;z<Z;z++)
+    radiuses[z] = 0;
 
+  target_z = Z*2;
+  curr_z = 0;
+  the_x = 0.45;
+  the_y = 0.45;
+  target_x = 0.45;
+  target_y = 0.45;
+  millisLastKinectData = 0;
+}
+
+void wave()
+{
   PVector center = new PVector(W*the_x, H*the_y, curr_z);
   PVector pos = new PVector(); 
   for (int z=0;z<Z;z++)
