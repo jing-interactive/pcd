@@ -4,11 +4,10 @@ You could find more videos and pictures at
 http://supernaturedesign.com/work/nikefaceoff/nikefaceoff.php
 
 Also postmortem articles at hudo.it.
-http://www.hudo.it/index.php?topic=21.0
+http://www.hudo.it/index.php/topic,203.0.html
 
-SupernatureDesign owns following picture's copyright.
+![im](http://vinjn.sinaapp.com/data/love_melanie.jpg)
 
-![im](http://supernaturedesign.com/work/nikefaceoff/images/nikefaceoff_img01.jpg)
-
+copyright vinjn.z@gmail.com
 
 
