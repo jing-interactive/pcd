@@ -1,7 +1,6 @@
-An incomplete version of the interacitve project for Nike 2011 event at Shanghai.
-
-You could find more videos and pictures at 
-http://supernaturedesign.com/work/nikefaceoff/nikefaceoff.php
+This sketch is my favorite one.
+Cause it's made for the wedding ceremony of my super dear cute Melanie.Q and I.
+And it did make a good demonstration.
 
 Also postmortem articles at hudo.it.
 http://www.hudo.it/index.php/topic,203.0.html
