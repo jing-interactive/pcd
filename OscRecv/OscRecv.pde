@@ -10,19 +10,22 @@ import oscP5.*;
 import netP5.*;
 
 OscP5 oscP5;
+String info = "";
 
 void setup() {
   size(400,400);
   frameRate(25);
   /* start oscP5, listening for incoming messages at port 12000 */
-  oscP5 = new OscP5(this,3333);   
+  oscP5 = new OscP5(this,7000);   
 }
 
 void draw() {
-  background(0);  
+  background(0); 
+  text(info, 10,height/2);
 }
  
-void oscEvent(OscMessage theOscMessage) {
+void oscEvent(OscMessage m) {
   /* check if theOscMessage has the address pattern we are looking for. */
-  println("### received "+theOscMessage.addrPattern());
+  info = "### received "+m.addrPattern();
+  println(info);
 }
