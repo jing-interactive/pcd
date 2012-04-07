@@ -24,14 +24,12 @@ void draw() {
 
 void mousePressed() {
   /* in the following different ways of creating osc messages are shown by example */
-  OscMessage myMessage;
+  OscMessage myMessage = new OscMessage("/block");
 
   if (mouseButton == LEFT)
-    myMessage = new OscMessage("/deactivate");
+    myMessage.add(1);
   else
-    myMessage = new OscMessage("/activate");
-
-  myMessage.add(123); /* add an int to the osc message */
+    myMessage.add(0);
 
   /* send the message */
   oscP5.send(myMessage, remoteIP, remotePort); 
