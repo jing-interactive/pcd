@@ -1,4 +1,6 @@
 import sojamo.drop.*;
+boolean first_drop = true;
+PImage bg = null;
 
 SDrop drop;
 
@@ -16,8 +18,8 @@ class UIElement
   //(x,y)是否在图片范围内
   boolean isPointInside(float x, float y)
   {
-    x -= pos.x;
-    y -= pos.y;
+//    x -= pos.x;
+ //   y -= pos.y;
     return (x > 0 && x < img.width && y>0 && y<img.height);
   }
   void move(float x, float y)
@@ -39,10 +41,12 @@ class UIElement
 ArrayList<UIElement> elements = new ArrayList<UIElement>();
 
 void setup() {
-  size(800, 800);
+  size(1280, 800);
   frameRate(30);
   drop = new SDrop(this);
-  imageMode(CENTER);
+  imageMode(CORNER);
+  frame.setResizable(true);
+  bg = loadImage("e:\\__svn_pool\\Minhang\\_AndroidApp\\RemoteCtrl_Tianjing\\res\\drawable-mdpi\\bg_load.png");
 }
 
 boolean dragging = false;
@@ -53,7 +57,6 @@ void mouseMoved()
   if (active != null)
     active.move(mouseX, mouseY);
 }
-
 
 void mouseReleased()
 {
@@ -78,7 +81,10 @@ void mouseReleased()
 }
 
 void draw() {
-  background(0);
+  if (bg == null)
+    background(0);
+  else
+    image(bg, 0, 0);
 
   for (UIElement e: elements)
     e.draw();
@@ -90,7 +96,17 @@ void dropEvent(DropEvent event) {
   if (event.isImage()) {
     println("### loading image ...");
     PImage m = event.loadImage();
-    elements.add(new UIElement(m, event.x(), event.y()));
+    if (bg == null)
+    {//set the bg
+//      size(bg.width, bg.height); 
+  //    frame.setSize(bg.width, bg.height);
+
+      bg = m;
+    }
+    else
+    {
+      elements.add(new UIElement(m, event.x(), event.y()));
+    }
   }
 }
 

@@ -22,7 +22,7 @@ CameraSurfaceView gCamSurfView;
 PImage gBuffer;
 
 void setup() {
-  size(screenWidth, screenHeight, A2D);
+  size(displayWidth, displayHeight, A2D);
 }
 
 void draw() {
