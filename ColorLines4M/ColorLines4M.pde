@@ -35,7 +35,7 @@ Pathfinder pathfinder;
 void setup()
 {
 //    size(displayWidth, displayHeight);
-    orientation(PORTRAIT);
+//    orientation(PORTRAIT);
     frameRate(30);
     textAlign(LEFT);
     textSize(30);
