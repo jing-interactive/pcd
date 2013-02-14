@@ -27,8 +27,9 @@ final int kInvalidIndex = -11;
 
 int[][] cells = new int[kCellCount][kCellCount];
 int[] newBallIndices = new int[kNewBallCount];
-int[] newBallCol = new int[kNewBallCount];
+int[] newBallCols = new int[kNewBallCount];
 int[] newBallRow = new int[kNewBallCount];
+
 int currentCol, currentRow;
 int targetCol, targetRow;
 
@@ -138,6 +139,17 @@ void draw()
         }
     }
     {
+        // next three balls
+        for (int ball=0; ball<kNewBallCount; ball++)
+        {
+            fill(ballColors[newBallIndices[ball]]);
+            noStroke();
+            strokeWeight(1);
+            ellipse(cellToDraw(kCellCount+0.7f), cellToDraw(0.5f + ball), // (cx,cy)
+                kBallRadius*0.5f, kBallRadius*0.5f);// (w, h)       
+        }
+    }
+    {
         // balls
         for (int col=0; col<kCellCount; col++) 
         {
@@ -185,14 +197,19 @@ void generateNewBalls(boolean firstTime)
             int col = (int)random(kCellCount);
             if (cells[row][col] == kEmptyCell)
             {
-                setIndex(row, col, index);
+                if (firstTime)
+                {
+                    setIndex(row, col, index);
+                }
+                else
+                {
+                    setIndex(row, col, newBallIndices[ball]);
+                }
                 // print('('+row+","+col+")="+newBallIndices[ball]+"   ");
                 print(index+"   ");
                 emptyCellCount --;
-                if (!firstTime)
+                if (ball < 3)
                 {
-                    newBallCol[ball] = col;
-                    newBallRow[ball] = row;
                     newBallIndices[ball] = index;
                 }
                 break;
