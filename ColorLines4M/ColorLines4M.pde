@@ -35,6 +35,7 @@ boolean srcSelected = false;
 boolean destSelected = false;
 
 boolean readyForNewBalls = true;
+Pathfinder pathfinder = new Pathfinder(kCellCount, kCellCount, 1, 1);
 
 void setup()
 {
@@ -78,26 +79,37 @@ void mouseReleased()
             // select
             currentCol = col;
             currentRow = row;
+            pathfinder.setBot(0, currentRow, currentCol);
         }
         else
         {
             if (currentCol >= 0 && currentRow >= 0)
             {
                 // move
+                // 0.path finding
+                pathfinder.setTarget(0, row, col);
+                if (!pathfinder.findPath(0, 0, false))
+                {
+                    return;
+                }
+                
                 // 1.swap
-                cells[row][col] = cells[currentRow][currentCol];
-                cells[currentRow][currentCol] = kEmptyCell;
+                setIndex(row, col, cells[currentRow][currentCol]);
+                setIndex(currentRow, currentCol, kEmptyCell);
+
                 // 2.invalidate
                 currentCol = kInvalidIndex;
                 currentRow = kInvalidIndex;
+                
                 // 3.add new balls
                 readyForNewBalls = true;
             }
             else
             {
-                // select
+                // replace current selection
                 currentCol = col;
-                currentRow = row;        
+                currentRow = row;
+                pathfinder.setBot(0, currentRow, currentCol);
             }
         }
     }
@@ -116,7 +128,7 @@ void update()
 void draw()
 {
     update();
-
+   
     background(0, 43, 54);
     {
         // the board background
@@ -189,7 +201,8 @@ void generateNewBalls()
             {
                 newBallCol[ball] = col;
                 newBallRow[ball] = row;
-                cells[row][col] = newBallIndices[ball];
+                // cells[row][col] = newBallIndices[ball];
+                setIndex(row, col, newBallIndices[ball]);
                 // print('('+row+","+col+")="+newBallIndices[ball]+"   ");
                 print(newBallIndices[ball]+"   ");
                 emptyCellCount --;
@@ -208,6 +221,12 @@ void generateNewBalls()
 int index(int row, int col)
 {
     return cells[row][col];
+}
+
+void setIndex(int row, int col, int index)
+{
+    cells[row][col] = index;
+    pathfinder.setGrid(row, col, index != kEmptyCell ? -1 : 0);
 }
 
 void checkFiveBalls()
@@ -239,7 +258,7 @@ void checkFiveBalls()
                     println(ballsToVanish.size());
                     for (PVector pos : ballsToVanish)
                     {
-                        cells[(int)pos.x][(int)pos.y] = kEmptyCell;
+                        setIndex((int)pos.x, (int)pos.y, kEmptyCell);
                     }
                 }
             }
@@ -270,7 +289,7 @@ void checkFiveBalls()
             {
                 for (PVector pos : ballsToVanish)
                 {
-                    cells[(int)pos.x][(int)pos.y] = kEmptyCell;
+                    setIndex((int)pos.x, (int)pos.y, kEmptyCell);
                 }
             }
         }

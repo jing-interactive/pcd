@@ -21,18 +21,22 @@ class Pathfinder{
     openlist = new ArrayList();
     closedlist = new ArrayList();
   }
+  
   //init or relocate bot
   void setBot(int id, int x, int y){
     bot[id] = new Vec2(x, y);
   }
+  
   //init or relocate target
   void setTarget(int id, int x, int y){
     target[id] = new Vec2(x, y);
   }
+  
   //set terrain costs or a wall
   void setGrid(int x, int y, int value){
     grid[x][y] = value;
   }
+  
   //return the next best coord to move to to get to a locale
   Vec2 bestVec2(int botID, int targetID){
     findPath(botID, targetID, false);
@@ -42,8 +46,9 @@ class Pathfinder{
     }
     return null;
   }
+  
   //A* pathfinding algorithm
-  void findPath(int botID, int targetID, boolean move){
+  boolean findPath(int botID, int targetID, boolean move){
     int x = bot[botID].x;
     int y = bot[botID].y;
     int targetX = target[targetID].x;
@@ -55,7 +60,7 @@ class Pathfinder{
     int H = 10 * (abs(x - targetX) + abs(y - targetY));
     //if heuristic cost is zero, pathfinding is unnecessary
     if(H == 0){
-      return;
+      return true;
     }
     //clear lists
     onList = new boolean[wide][high];
@@ -87,29 +92,7 @@ class Pathfinder{
         openlist.add(new Node(new Vec2(x,y), new Vec2(x, y - 1), G + H + grid[x][y - 1]));
         onList[x][y - 1] = true;
       }
-      //corner nodes - higher cost
-      G = 14;
-      //add possible nodes to open list
-      if(gridLegal(x + 1, y + 1) && !onList[x + 1][y + 1]){
-        H = 10 * (abs(x + 1 - targetX) + abs(y + 1 - targetY));
-        openlist.add(new Node(new Vec2(x,y), new Vec2(x + 1, y + 1), G + H + grid[x + 1][y + 1]));
-        onList[x + 1][y + 1] = true;
-      }
-      if(gridLegal(x - 1, y + 1) && !onList[x - 1][y + 1]){
-        H = 10 * (abs(x - 1 - targetX) + abs(y + 1 - targetY));
-        openlist.add(new Node(new Vec2(x,y), new Vec2(x - 1, y + 1), G + H + grid[x - 1][y + 1]));
-        onList[x - 1][y + 1] = true;
-      }
-      if(gridLegal(x - 1, y - 1) && !onList[x - 1][y - 1]){
-        H = 10 * (abs(x - 1 - targetX) + abs(y - 1 - targetY));
-        openlist.add(new Node(new Vec2(x,y), new Vec2(x - 1, y - 1), G + H + grid[x - 1][y - 1]));
-        onList[x - 1][y - 1] = true;
-      }
-      if(gridLegal(x + 1, y - 1) && !onList[x + 1][y - 1]){
-        H = 10 * (abs(x + 1 - targetX) + abs(y - 1 - targetY));
-        openlist.add(new Node(new Vec2(x,y), new Vec2(x + 1, y - 1), G + H + grid[x + 1][y - 1]));
-        onList[x + 1][y - 1] = true;
-      }
+      
       //find lowest costing node and add to closed list
       int lowestCost = 10000;
       int lowestCostNode = -1;
@@ -122,7 +105,7 @@ class Pathfinder{
       }
       //escape node search if the target cannot be found
       if(lowestCostNode == -1){
-        break;
+        return false;
       }
       Node temp = (Node)openlist.remove(lowestCostNode);
       closedlist.add(temp);
@@ -138,7 +121,9 @@ class Pathfinder{
         bot[botID].y = temp.y;
       }
     }
+    return true;
   }
+  
   //creates a path to the target from the closed list
   ArrayList logicalPath(int botID, int targetID){
     ArrayList pathway = new ArrayList();
@@ -179,6 +164,7 @@ class Pathfinder{
     }
     return pathway;
   }
+  
   //is a grid square filled or no?
   boolean gridLegal(int x, int y){
     if(x < 0 || x > wide - 1 || y < 0 || y > high - 1 || grid[x][y] < 0){
@@ -186,6 +172,7 @@ class Pathfinder{
     }
     return true;
   }
+  
   //pathfinding node class
   class Node{
     Vec2 n, p;            //n = node's location, p = parent's location
@@ -197,6 +184,7 @@ class Pathfinder{
     }
   }
 }
+
 //2D ArrayList class
 static class Vec2{
   int x,y;
