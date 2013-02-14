@@ -16,7 +16,6 @@ final int kBoardSize = kCellSize * kCellCount;
 final int kNewBallCount = 3;
 final int kMinMatchBallCount = 5;
 
-int emptyCellCount;
 int score = 0;
 
 int Width = 600;
@@ -95,24 +94,22 @@ void mouseReleased()
                 currentRow = kInvalidIndex;
                 
                 // 3.add new balls
-                readyForNewBalls = true;
+                if (checkFiveBalls())
+                    readyForNewBalls = false;
+                else
+                    readyForNewBalls = true;
             }
         }
     }
 }
 
-void update()
+void draw()
 {
     if (readyForNewBalls)
     {
         generateNewBalls(false);
+        checkFiveBalls();
     }
-    checkFiveBalls();
-}
-
-void draw()
-{
-    update();
    
     background(0, 43, 54);
     {
@@ -185,6 +182,23 @@ void draw()
 
 void generateNewBalls(boolean firstTime)
 {
+    int currentBallCount = 0;
+    for (int col=0; col<kCellCount; col++) 
+    {
+        for (int row=0; row<kCellCount; row++) 
+        {
+            if (cells[row][col] != kEmptyCell)
+            {
+                currentBallCount++;
+            }
+        }
+    }
+    if (currentBallCount >= kCellCount*kCellCount - 3)
+    {
+        resetGame();
+        return;
+    }
+                
     int ballCount = firstTime ? kNewBallCount + 1 : kNewBallCount;
     for (int ball=0;ball<ballCount;ball++)
     {
@@ -207,17 +221,12 @@ void generateNewBalls(boolean firstTime)
                 }
                 // print('('+row+","+col+")="+newBallIndices[ball]+"   ");
                 // print(index+"   ");
-                emptyCellCount --;
                 if (ball < 3)
                 {
                     newBallIndices[ball] = index;
                 }
                 break;
             }
-        }
-        if (emptyCellCount <= 0)
-        {
-            resetGame();
         }
     }
     // print("\n");
@@ -235,11 +244,8 @@ void setIndex(int row, int col, int index)
     pathfinder.setGrid(row, col, index != kEmptyCell ? -1 : 0);
 }
 
-void checkFiveBalls()
+boolean checkFiveBalls()
 {
-    final int kTestCellCount = kCellCount-kMinMatchBallCount+1;// to save computation
-    // todo: combo
-
     ArrayList<PVector>[] initials = new ArrayList[4];
     PVector[] deltas = new PVector[4];
     {
@@ -323,13 +329,13 @@ void checkFiveBalls()
             }
         }
     }
-    testBalls(totalBallsToVanish);
+    return testBalls(totalBallsToVanish);
 }
 
-void testBalls(ArrayList<PVector> ballsToVanish)
+boolean testBalls(ArrayList<PVector> ballsToVanish)
 {
     if (ballsToVanish.isEmpty())
-        return;
+        return false;
         
     for (PVector pos : ballsToVanish)
     {
@@ -341,6 +347,8 @@ void testBalls(ArrayList<PVector> ballsToVanish)
     score += size*10;
     if (size > kMinMatchBallCount)
         score += (size - kMinMatchBallCount)*(size - kMinMatchBallCount)*10;
+        
+    return true;
 }
 
 void resetGame()
@@ -354,7 +362,6 @@ void resetGame()
     }
     currentCol = currentRow = kInvalidIndex;
     targetCol = targetRow = kInvalidIndex;
-    emptyCellCount = kCellCount * kCellCount;
     
     pathfinder = new Pathfinder(kCellCount, kCellCount, 1, 1);
     
@@ -557,5 +564,3 @@ static class Vec2{
     this.y = y;
   }
 }
-
-
