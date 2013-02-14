@@ -206,7 +206,7 @@ void generateNewBalls(boolean firstTime)
                     setIndex(row, col, newBallIndices[ball]);
                 }
                 // print('('+row+","+col+")="+newBallIndices[ball]+"   ");
-                print(index+"   ");
+                // print(index+"   ");
                 emptyCellCount --;
                 if (ball < 3)
                 {
@@ -220,7 +220,7 @@ void generateNewBalls(boolean firstTime)
             resetGame();
         }
     }
-    print("\n");
+    // print("\n");
     readyForNewBalls = false;
 }
 
@@ -333,10 +333,10 @@ void testBalls(ArrayList<PVector> ballsToVanish)
         
     for (PVector pos : ballsToVanish)
     {
-        print(pos.x+","+pos.y+" ");
+        // print(pos.x+","+pos.y+" ");
         setIndex((int)pos.x, (int)pos.y, kEmptyCell);
     }
-    println("");
+    // println("");
     int size = ballsToVanish.size();
     score += size*10;
     if (size > kMinMatchBallCount)
