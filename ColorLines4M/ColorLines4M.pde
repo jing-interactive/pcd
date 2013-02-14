@@ -34,7 +34,7 @@ int targetCol, targetRow;
 boolean srcSelected = false;
 boolean destSelected = false;
 
-boolean readyForNewBalls = true;
+boolean readyForNewBalls = false;
 Pathfinder pathfinder = new Pathfinder(kCellCount, kCellCount, 1, 1);
 
 void setup()
@@ -51,6 +51,8 @@ void setup()
     currentCol = currentRow = kInvalidIndex;
     targetCol = targetRow = kInvalidIndex;
     emptyCellCount = kCellCount * kCellCount;
+    
+    generateNewBalls(true);
 }
 
 int mouseToCell(float mouseXY)
@@ -104,13 +106,6 @@ void mouseReleased()
                 // 3.add new balls
                 readyForNewBalls = true;
             }
-            else
-            {
-                // replace current selection
-                currentCol = col;
-                currentRow = row;
-                pathfinder.setBot(0, currentRow, currentCol);
-            }
         }
     }
 }
@@ -119,10 +114,9 @@ void update()
 {
     if (readyForNewBalls)
     {
-        generateNewBalls();
+        generateNewBalls(false);
     }
     checkFiveBalls();
-    // if (currentCol >= 0 && currentRow >= 0)
 }
 
 void draw()
@@ -185,13 +179,13 @@ void draw()
     }
 }
 
-void generateNewBalls()
+void generateNewBalls(boolean firstTime)
 {
-    for (int ball=0;ball<kNewBallCount;ball++)
+    int ballCount = firstTime ? kNewBallCount + 1 : kNewBallCount;
+    for (int ball=0;ball<ballCount;ball++)
     {
         // random colors
-        for (int i=0;i<10;i++)
-            newBallIndices[ball] = int(random(ballColors.length));
+        int index = int(random(ballColors.length));
         // random position
         while (true)
         {
@@ -199,13 +193,16 @@ void generateNewBalls()
             int col = (int)random(kCellCount);
             if (cells[row][col] == kEmptyCell)
             {
-                newBallCol[ball] = col;
-                newBallRow[ball] = row;
-                // cells[row][col] = newBallIndices[ball];
-                setIndex(row, col, newBallIndices[ball]);
+                setIndex(row, col, index);
                 // print('('+row+","+col+")="+newBallIndices[ball]+"   ");
-                print(newBallIndices[ball]+"   ");
+                print(index+"   ");
                 emptyCellCount --;
+                if (!firstTime)
+                {
+                    newBallCol[ball] = col;
+                    newBallRow[ball] = row;
+                    newBallIndices[ball] = index;
+                }
                 break;
             }
         }
@@ -234,65 +231,96 @@ void checkFiveBalls()
     final int kTestCellCount = kCellCount-kMinMatchBallCount+1;// to save computation
     // todo: combo
 
-    // for each row
-    for (int row=0; row<kCellCount; row++) 
-    { 
-        for (int col=0; col<kTestCellCount; col++) 
+    ArrayList<PVector>[] initials = new ArrayList[4];
+    PVector[] deltas = new PVector[4];
+    {
+        // dir#0
+        initials[0] = new ArrayList<PVector>();
+        for (int row=0; row<kCellCount; row++) 
         {
-            int idxForTest = index(row, col);
-            if (idxForTest != kEmptyCell)
+            initials[0].add(new PVector(row, 0));
+        }
+        deltas[0] = new PVector(0, 1);
+        
+        // dir#1
+        initials[1] = new ArrayList<PVector>();
+        for (int col=0; col<kCellCount; col++) 
+        {
+            initials[1].add(new PVector(0, col));
+        }
+        deltas[1] = new PVector(1, 0);
+        
+        // dir#2
+        initials[2] = new ArrayList<PVector>();
+        for (int row=0; row<kCellCount; row++) 
+        {
+            initials[2].add(new PVector(row, 0));
+        }
+        for (int col=0; col<kCellCount; col++) 
+        {
+            initials[2].add(new PVector(0, col));
+        }
+        deltas[2] = new PVector(1, 1);
+        
+        // dir#3
+        initials[3] = new ArrayList<PVector>();
+        for (int row=0; row<kCellCount; row++) 
+        {
+            initials[3].add(new PVector(row, 0));
+        }
+        for (int col=0; col<kCellCount; col++) 
+        {
+            initials[3].add(new PVector(kCellCount-1, col));
+        }
+        deltas[3] = new PVector(-1, 1);        
+    }
+    
+    for (int dir=0;dir < 4;dir++)
+    {
+        for (PVector initial : initials[dir])
+        {
+            PVector head = initial.get();
+            while (head.x >= 0 && head.x < kCellCount &&
+                head.y >= 0 && head.y < kCellCount)
             {
-                ArrayList<PVector> ballsToVanish = new ArrayList<PVector>();
-                ballsToVanish.add(new PVector(row, col));
-                for (int nextCol=col+1; nextCol<kCellCount; nextCol++) 
+                int idxForTest = index((int)head.x, (int)head.y);
+                if (idxForTest != kEmptyCell)
                 {
-                    if (index(row, nextCol) != idxForTest)
+                    ArrayList<PVector> ballsToVanish = new ArrayList<PVector>();
+                    PVector next = head.get();
+                    ballsToVanish.add(head.get());
+                    next.add(deltas[dir]);
+                    while (next.x >= 0 && next.x < kCellCount &&
+                        next.y >= 0 && next.y < kCellCount)
                     {
-                        col = nextCol-1;// to save computation
-                        break;
+                        if (index((int)next.x, (int)next.y) != idxForTest)
+                        {
+                            head = next.get();
+                            head.sub(deltas[dir]);// to save computation
+                            break;
+                        }
+                        // println(head+"->"+next);
+                        ballsToVanish.add(next.get());
+                        next.add(deltas[dir]);
                     }
-                    ballsToVanish.add(new PVector(row, nextCol));
+                    testBalls(ballsToVanish);                    
                 }
-                if (ballsToVanish.size() >= kMinMatchBallCount)
-                {
-                    println(ballsToVanish.size());
-                    for (PVector pos : ballsToVanish)
-                    {
-                        setIndex((int)pos.x, (int)pos.y, kEmptyCell);
-                    }
-                }
+                head.add(deltas[dir]);
             }
         }
     }
-   
-    // for each col
-    for (int col=0; col<kCellCount; col++) 
-    { 
-        for (int row=0; row<kTestCellCount; row++) 
+}
+
+void testBalls(ArrayList<PVector> ballsToVanish)
+{
+    if (ballsToVanish.size() >= kMinMatchBallCount)
+    {
+        for (PVector pos : ballsToVanish)
         {
-            int idxForTest = index(row, col);
-            ArrayList<PVector> ballsToVanish = new ArrayList<PVector>();
-            ballsToVanish.add(new PVector(row, col));
-            if (idxForTest != kEmptyCell)
-            {
-                for (int nextRow=row+1; nextRow<kCellCount; nextRow++) 
-                {
-                    if (index(nextRow, col) != idxForTest)
-                    {
-                        row = nextRow-1;// to save computation
-                        break;
-                    }
-                    ballsToVanish.add(new PVector(nextRow, col));
-                }
-            }
-            if (ballsToVanish.size() >= kMinMatchBallCount)
-            {
-                for (PVector pos : ballsToVanish)
-                {
-                    setIndex((int)pos.x, (int)pos.y, kEmptyCell);
-                }
-            }
+            print(pos.x+","+pos.y+" ");
+            setIndex((int)pos.x, (int)pos.y, kEmptyCell);
         }
+        println("");
     }
 }
 
