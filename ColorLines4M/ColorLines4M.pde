@@ -8,9 +8,9 @@ final color[] ballColors = {
     color(20, 20, 20), // black
 };
 
-final int kSpacing = 20;
 final int kCellCount = 9;
 final int kBallRadius = 40;
+final int kSpacing = kBallRadius/2;
 final int kCellSize = int(kBallRadius*1.4f);
 final int kBoardSize = kCellSize * kCellCount;
 final int kNewBallCount = 3;
@@ -34,7 +34,7 @@ Pathfinder pathfinder;
 
 void setup()
 {
-//    size(displayWidth, displayHeight);
+    size(600, 600);
 //    orientation(PORTRAIT);
     frameRate(30);
     textAlign(LEFT);
