@@ -18,9 +18,6 @@ final int kMinMatchBallCount = 5;
 
 int score = 0;
 
-int Width = 600;
-int Height = 600;
-
 final int kEmptyCell = -1;
 final int kInvalidIndex = -11;
 
@@ -37,7 +34,8 @@ Pathfinder pathfinder;
 
 void setup()
 {
-    size(Width, Height);
+//    size(displayWidth, displayHeight);
+    orientation(PORTRAIT);
     frameRate(30);
     textAlign(LEFT);
     textSize(30);
