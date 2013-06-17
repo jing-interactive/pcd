@@ -114,7 +114,7 @@ void oscEvent(OscMessage msg)
             value_list[i] = null;//表示没有参赛者
           println(value_list[i]);
         }
-        catch(UnsupportedEncodingException e) {
+        catch(Exception e) {
           e.printStackTrace();
         }
       }
