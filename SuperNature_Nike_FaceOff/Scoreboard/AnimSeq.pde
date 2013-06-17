@@ -6,7 +6,7 @@ void anim_setup()
   Ani.init(this);
 
   float time = 1;
-  String mode = Ani.CIRC_IN_OUT;
+  Easing mode = Ani.CIRC_IN_OUT;
 
   intro_left_seq = new AniSequence(this);
   intro_left_seq.beginSequence();

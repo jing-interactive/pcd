@@ -69,7 +69,8 @@ void oscEvent(OscMessage msg)
           if (debug)
             println(value_list[i]);
         }
-        catch(UnsupportedEncodingException e) {
+//        catch(UnsupportedEncodingException e) {
+        catch(Exception e) {
           e.printStackTrace();
         }
       }
