@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 class Profile implements Comparable {
   String name;
   int miles;
