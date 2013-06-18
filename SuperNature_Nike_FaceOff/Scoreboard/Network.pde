@@ -105,7 +105,7 @@ void oscEvent(OscMessage msg)
           if (debug)
             println(name_list[i]);
         }
-        catch(UnsupportedEncodingException e) {
+        catch(Exception e) {
           e.printStackTrace();
         }
       }
