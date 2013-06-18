@@ -1,14 +1,16 @@
-An incomplete version of the interacitve project for Nike 2011 event at Shanghai.
+A complete version of the interacitve project for Nike 2011 event at Shanghai.
 
 You could find more videos and pictures at 
 http://supernaturedesign.com/work/nikefaceoff/nikefaceoff.php
 
-Also postmortem articles at hudo.it.
-http://www.hudo.it/index.php?topic=21.0
+Also postmortem articles at [my website](http://vinjn.github.io/2011/08/19/post-morten-of-Nike-FaceOff-running-show.html)
 
-SupernatureDesign owns following picture's copyright.
+* Controller: query data from Arduino HTTP server and send msg to **Panel** and **Scoreboard**
+* Panel: rendering lines and particles 
+* Scoreboard: the most complicated parts, shows names, speed, time and the result.
 
-![im](http://supernaturedesign.com/work/nikefaceoff/images/nikefaceoff_img01.jpg)
+
+
 
 
 

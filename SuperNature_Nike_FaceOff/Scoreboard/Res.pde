@@ -13,7 +13,12 @@ PImage[] six_number = new PImage[6];
 
 //gaming
 PImage left_gaming,right_gaming;
-PImage left_team_gaming,right_team_gaming;
+
+//rank
+PImage banner_winner, banner_normal,rank_bg;
+
+//winner
+PImage winner_bg;
 
 void load_images()
 {
@@ -39,8 +44,14 @@ void load_images()
   
   //gaming
   left_gaming = _loadImage("left_gaming.png");
-  right_gaming = _loadImage("right_gaming.png");    
-  left_team_gaming = _loadImage("left_team_gaming.png");
-  right_team_gaming = _loadImage("right_team_gaming.png");    
+  right_gaming = _loadImage("right_gaming.png");  
+
+  //rank
+  banner_winner = _loadImage("banner_winner.png");
+  banner_normal = _loadImage("banner_normal.png");
+  rank_bg = _loadImage("rank_bg.png");
+  
+  //winner
+  winner_bg = _loadImage("winner.png");
 }
 

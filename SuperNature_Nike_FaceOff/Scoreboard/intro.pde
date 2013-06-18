@@ -18,40 +18,35 @@ void intro_setup()
   rx_0 = rx_1 = rx_2 = rx_3 = rx_4 = 0;
 
   team_x = team_y = 0;
-}
-/*
-final int l_w2 = w2-10;
- void draw_l(int x, int y)
- {
- beginShape();
- vertex(x+60, y);
- vertex(x+l_w2-30, y);
- vertex(x+l_w2-30, y+btn_height);
- vertex(x+45,  y+btn_height);
- endShape(CLOSE);
- } 
- 
- void draw_r(int x, int y)
- {
- beginShape();
- vertex(x+45, y);
- vertex(x+l_w2-15, y);
- vertex(x+l_w2-30, y+btn_height);
- vertex(x+45,  y+btn_height);
- endShape(CLOSE);
- }
- */
+  millis_reset();
+  status = intro;
+
+  if (team_mode)
+    intro_team_seq.start();          
+  else
+  {
+    intro_left_seq.start();
+    intro_right_seq.start();
+  }
+} 
+
 void intro_team_draw() 
 { 
   rectMode(CORNER);
-  image(left_big_team, team_x-left_big_team.width, 529*Scale);
-  image(right_big_team, width-team_y, 529*Scale);
+  image(left_big_team, team_x-left_big_team.width, 529*YScale);
+  image(right_big_team, width-team_y, 529*YScale);
+
+  cnFont(46);
+  fill(blue_name);
+  text(name_list[0], team_x-left_big_team.width+203, 434);
+  fill(green_name);
+  text(name_list[1], right_big_team.width-team_y+434+400, 434);
 }
 
 void intro_person_draw()
 { 
-  int y0 = int(350*Scale);
-  int dy = int(134*Scale);
+  int y0 = int(350*XScale);
+  int dy = int(134*YScale);
   rectMode(CORNER);  
 
   lx[0] = lx_0;
@@ -64,16 +59,26 @@ void intro_person_draw()
   rx[2] = rx_2;
   rx[3] = rx_3;
   rx[4] = rx_4;
-  fill(green_main);
+  int adx = 120;
+  int ady = 42;  
   for (int i=0;i<5;i++)
   {
     image(left_fly_intros[i%2], lx[i]-left_fly_intros[i%2].width+10, y0+dy*i);
   } 
-
-  fill(blue_main);
+  cnFont(35);
+  fill(blue_name);
+  for (int i=0;i<5;i++)
+  {
+    text(name_list[i], lx[i]-left_fly_intros[i%2].width+266, y0+dy*i+ady);
+  } 
   for (int i=0;i<5;i++)
   { 
     image(right_fly_intros[i%2], width-rx[i]-10, y0+dy*i);
+  }
+  fill(green_name);
+  for (int i=0;i<5;i++)
+  {
+    text(name_list[5+i], right_fly_intros[i%2].width-rx[i]+273+500, y0+dy*i+ady);
   }
 }
 
