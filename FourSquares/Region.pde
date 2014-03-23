@@ -1,4 +1,6 @@
 // Region has several Buttons
+static int sPinCounter = kPinBase;
+
 class Region
 {
     class VertexData
@@ -64,7 +66,7 @@ class Region
                 {
                     aButton.markEnd();
                 }
-                aButton = new Button(line.substring(1, 3));
+                aButton = new Button(line.substring(1, 3), sPinCounter++);
                 //                println(aButton);
                 mButtons.add(aButton);
             }

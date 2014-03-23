@@ -17,9 +17,10 @@ Region[] regions = new Region[regionNames.length];
 void setup()
 {
     size(displayWidth, displayHeight);
-    
+
     setupAudio();
     setupGUI();
+    setupArduino();
 
     for (int i=0; i<regionNames.length; i++)
     {

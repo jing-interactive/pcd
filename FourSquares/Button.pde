@@ -2,12 +2,14 @@
 class Button
 {
     String mName;
+    int mPin;
     ArrayList<PVector> mVertices = new ArrayList<PVector>();
     color mButtonColor;
 
-    Button(String name)
+    Button(String name, int pin)
     {
         mName = name;
+        mPin = pin;
     }
 
     String toString()
