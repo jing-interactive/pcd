@@ -14,7 +14,7 @@ class Region
                     String key = line.substring(0, assignIndex);
                     int x = int(line.substring(assignIndex + 2, commaIndex));
                     int y = int(line.substring(commaIndex + 1, line.length() - 1));
-//                    println(key + ":" + x + ", " + y);
+                    //                    println(key + ":" + x + ", " + y);
                     mVertices.put(key, new PVector(x, y));
                 }
             }
@@ -23,6 +23,30 @@ class Region
     }
 
     VertexData mVertexData;
+
+    void update(Movie movie)
+    {
+        for (Button button: mButtons)
+        {
+            button.update(movie);
+        }
+    }
+
+    void draw2D(int x, int y)
+    {
+        for (Button button: mButtons)
+        {
+            button.draw2D(x, y);
+        }
+    }
+
+    void draw1D(int x, int y)
+    {
+        for (Button button: mButtons)
+        {
+            x = button.draw1D(x, y);
+        }
+    }
 
     Region(String regionName)
     {
@@ -41,7 +65,7 @@ class Region
                     aButton.markEnd();
                 }
                 aButton = new Button(line.substring(1, 3));
-//                println(aButton);
+                //                println(aButton);
                 mButtons.add(aButton);
             }
             else

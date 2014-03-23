@@ -3,6 +3,7 @@ class Button
 {
     String mName;
     ArrayList<PVector> mVertices = new ArrayList<PVector>();
+    color mButtonColor;
 
     Button(String name)
     {
@@ -49,12 +50,36 @@ class Button
         }
     }
 
-    void draw()
+    void update(Movie movie)
     {
         for (PVector vertex: mVertices)
         {
-            fill((int)vertex.z);
-            ellipse(vertex.x, vertex.y, 10, 10);
+            vertex.z = movie.get((int)vertex.x, (int)vertex.y);
+        }
+    }
+
+    color getColor(PVector vertex)
+    {
+        return (int)vertex.z + mButtonColor;
+    }
+
+    int draw1D(int x, int y)
+    {
+        for (PVector vertex: mVertices)
+        {
+            stroke(getColor(vertex));
+            point(x, y);
+            x++;
+        }
+        return x;
+    }
+
+    void draw2D(int x, int y)
+    {
+        for (PVector vertex: mVertices)
+        {
+            fill(getColor(vertex));
+            ellipse(x + vertex.x, y + vertex.y, 10, 10);
         }
     }
 }

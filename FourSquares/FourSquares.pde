@@ -16,7 +16,10 @@ Region[] regions = new Region[regionNames.length];
 
 void setup()
 {
-    size(400, 400);
+    size(displayWidth, displayHeight);
+    
+    setupAudio();
+    setupGUI();
 
     for (int i=0; i<regionNames.length; i++)
     {
@@ -26,8 +29,11 @@ void setup()
     mov = new Movie(this, "track_test.mp4");
     mov.play();
     mov.loop();
+}
 
-    noStroke();
+void keyPressed()
+{
+    bellSnd.trigger();
 }
 
 void draw()
@@ -37,19 +43,14 @@ void draw()
     {
         mov.read();
         mov.loadPixels();
-        for (Button button: regions[3].mButtons)
-        {
-            for (PVector vertex: button.mVertices)
-            {
-                vertex.z = mov.get((int)vertex.x, (int)vertex.y);
-            }
-        }
+        regions[3].update(mov);
     }
 
     image(mov, 200, 0);
-    for (Button button: regions[3].mButtons)
-    {
-        button.draw();
-    }
+
+    regions[3].draw1D(0, 200);
+
+    noStroke();
+    regions[3].draw2D(0, 0);
 }
 
