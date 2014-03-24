@@ -1,5 +1,8 @@
+import processing.video.*;
+import java.util.Map;
+
 // Region has several Buttons
-static int sPinCounter = kPinBase;
+int gPinCounter = 0;
 
 class Region
 {
@@ -26,11 +29,50 @@ class Region
 
     VertexData mVertexData;
 
-    void update(Movie movie)
+    ArrayList<Movie> mMovies = new ArrayList<Movie>();
+    Movie mCurrentMovie;
+
+    void addMovie(String movieName)
     {
+        mMovies.add(new Movie(self, movieName));
+    }
+
+    Movie getRandomMovie()
+    {
+        return mMovies.get((int)random(mMovies.size()));
+    }
+
+    void update()
+    {
+        if (mCurrentMovie != null && mCurrentMovie.available())
+        {
+            mCurrentMovie.read();
+            //            mCurrentMovie.loadPixels();
+        }
+
+        boolean isRegionPressed = false;
+
         for (Button button: mButtons)
         {
-            button.update(movie);
+            button.update(mCurrentMovie);
+            isRegionPressed = isRegionPressed || button.isPressed;
+        }
+
+        if (isRegionPressed)
+        {
+//            bellSnd.trigger(); // TODO: randomize
+            
+            if (mCurrentMovie == null || mCurrentMovie.time() >= mCurrentMovie.duration())
+            {
+                mCurrentMovie = getRandomMovie();
+                mCurrentMovie.stop();
+                mCurrentMovie.play();
+            }
+        }
+
+        if (mCurrentMovie != null && mCurrentMovie.time() >= mCurrentMovie.duration())
+        {
+            mCurrentMovie = null;
         }
     }
 
@@ -39,6 +81,11 @@ class Region
         for (Button button: mButtons)
         {
             button.draw2D(x, y);
+        }
+
+        if (mCurrentMovie != null)
+        {
+            text(mCurrentMovie.time(), x, y);
         }
     }
 
@@ -66,7 +113,8 @@ class Region
                 {
                     aButton.markEnd();
                 }
-                aButton = new Button(line.substring(1, 3), sPinCounter++);
+                aButton = new Button(line.substring(1, 3), gPinCounter);
+                gPinCounter++;
                 //                println(aButton);
                 mButtons.add(aButton);
             }

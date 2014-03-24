@@ -14,7 +14,7 @@ class Button
 
     String toString()
     {
-        return mName + "/" + mVertices.size();
+        return mName + "/" + mPin;
     }
 
     void addVertex(PVector vertex)
@@ -36,7 +36,7 @@ class Button
         final int kMidDistance = 30;
         if ( a.dist(b) > kMidDistance)
         {
-            println(a + "->" + b);
+//            println(a + "->" + b);
             return 30;
         }
         return 15;
@@ -52,12 +52,23 @@ class Button
         }
     }
 
+    boolean isPressed = false;
+
     void update(Movie movie)
     {
-        for (PVector vertex: mVertices)
+        if (movie != null)
         {
-            vertex.z = movie.get((int)vertex.x, (int)vertex.y);
+            for (PVector vertex: mVertices)
+            {
+                vertex.z = movie.get((int)vertex.x, (int)vertex.y);
+            }
         }
+        isPressed = pinStatus[mPin];
+    }
+
+    void update()
+    {
+        isPressed = isPinHigh(mPin);
     }
 
     color getColor(PVector vertex)
@@ -80,8 +91,8 @@ class Button
     {
         for (PVector vertex: mVertices)
         {
-            fill(getColor(vertex));
-            ellipse(x + vertex.x, y + vertex.y, 10, 10);
+            stroke(getColor(vertex));
+            point(x + vertex.x, y + vertex.y);
         }
     }
 }

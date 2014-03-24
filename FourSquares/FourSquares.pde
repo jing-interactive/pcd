@@ -1,57 +1,63 @@
-import java.util.Map;
-import processing.video.*;
+PApplet self;
 
 String[] regionNames =
 {
-    "cobbled", //A1~A6
-    "asphalt", //B1~B6
+    "asphalt", //A1~A6
+    "cobbled", //B1~B6
     "grass", //C1~C5
     "track", //D1~D5
-    "centre", //E1
+    //    "centre", //E1
 };
-
-Movie mov;
 
 Region[] regions = new Region[regionNames.length];
 
-void setup()
+void setupRegion()
 {
-    size(displayWidth, displayHeight);
-
-    setupAudio();
-    setupGUI();
-    setupArduino();
-
     for (int i=0; i<regionNames.length; i++)
     {
         regions[i] = new Region(regionNames[i]);
     }
+    regions[0].addMovie("movie/asphalt.mov");
+    //    regions[0].addMovie("movie/asphalt_2.mov");
 
-    mov = new Movie(this, "track_test.mp4");
-    mov.play();
-    mov.loop();
+    regions[1].addMovie("movie/cobbled.mov");
+    //    regions[1].addMovie("movie/cobbled2.mov");
+
+    regions[2].addMovie("movie/grass.mov");
+    //    regions[2].addMovie("movie/grass2.mov");
+
+    regions[3].addMovie("movie/track.mov");
+    //    regions[3].addMovie("movie/track_2.mov");
 }
 
-void keyPressed()
+void setup()
 {
-    bellSnd.trigger();
+    self = this;
+
+    size(800, 600);
+    noFill();
+
+    setupAudio();
+    setupGUI();
+    setupArduino();
+    setupRegion();
 }
 
 void draw()
 {
     background(0);
-    if (mov.available() == true)
+
+    int idx=0;
+    noFill();
+    for (Region region: regions)
     {
-        mov.read();
-        mov.loadPixels();
-        regions[3].update(mov);
+        region.update();
+        region.draw1D(10, 10+idx*10);
+        region.draw2D(150 * idx, 200);
+
+        idx++;
     }
 
-    image(mov, 200, 0);
-
-    regions[3].draw1D(0, 200);
-
-    noStroke();
-    regions[3].draw2D(0, 0);
+    drawArduino();
 }
 
