@@ -2,16 +2,16 @@ import ddf.minim.*;
 
 Minim minim;
 AudioPlayer bgSnd;
-AudioSample bellSnd;
-AudioSample explosionSnd;
 
 void setupAudio()
 {
-    minim = new Minim(this);
-    bgSnd = minim.loadFile("ophelia.mp3");
-    bgSnd.play();
+  minim = new Minim(this);
 
-    bellSnd = minim.loadSample("bell.wav");
-    explosionSnd = minim.loadSample("explosion.wav");
+  if (isPlayingBgMusic)
+  {
+    bgSnd = minim.loadFile("center/audio/ophelia.mp3");
+    bgSnd.loop();
+    bgSnd.play();
+  }
 }
 

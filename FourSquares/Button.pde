@@ -1,99 +1,99 @@
 //Button has several vertices, intepolated from parent Region's VertexData
 class Button
 {
-    String mName;
-    int mPin;
-    ArrayList<PVector> mVertices = new ArrayList<PVector>();
-    color mButtonColor;
+  String mName;
+  int mPin;
+  ArrayList<PVector> mVertices = new ArrayList<PVector>();
+  color mButtonColor;
 
-    Button(String name, int pin)
+  Button(String name, int pin)
+  {
+    mName = name;
+    mPin = pin;
+  }
+
+  String toString()
+  {
+    return mName + "/" + mPin;
+  }
+
+  void addVertex(PVector vertex)
+  {
+    if (mVertices.size() != 0)
     {
-        mName = name;
-        mPin = pin;
+      interpolate(mVertices.get(mVertices.size() - 1), vertex);
     }
+    mVertices.add(vertex);
+  }
 
-    String toString()
+  void markEnd()
+  {
+    interpolate(mVertices.get(mVertices.size() - 1), mVertices.get(0));
+  }
+
+  int getPixelCount(PVector a, PVector b)
+  {
+    final int kMidDistance = 30;
+    if ( a.dist(b) > kMidDistance)
     {
-        return mName + "/" + mPin;
+      //            println(a + "->" + b);
+      return 30;
     }
+    return 15;
+  }
 
-    void addVertex(PVector vertex)
+  void interpolate(PVector start, PVector end)
+  {
+    int count = getPixelCount(start, end);
+    float step = 1.0f / count;
+    for (int i=1;i<count;i++)
     {
-        if (mVertices.size() != 0)
-        {
-            interpolate(mVertices.get(mVertices.size() - 1), vertex);
-        }
-        mVertices.add(vertex);
+      mVertices.add(PVector.lerp(start, end, i*step));
     }
+  }
 
-    void markEnd()
+  boolean isPressed = false;
+
+  void update(Movie movie)
+  {
+    if (movie != null)
     {
-        interpolate(mVertices.get(mVertices.size() - 1), mVertices.get(0));
+      for (PVector vertex: mVertices)
+      {
+        vertex.z = movie.get((int)vertex.x, (int)vertex.y);
+      }
     }
+    isPressed = pinStatus[mPin];
+  }
 
-    int getPixelCount(PVector a, PVector b)
+  void update()
+  {
+    isPressed = isPinHigh(mPin);
+  }
+
+  color getColor(PVector vertex)
+  {
+    return (int)vertex.z + mButtonColor;
+  }
+
+  int draw1D(int x, int y)
+  {
+    for (PVector vertex: mVertices)
     {
-        final int kMidDistance = 30;
-        if ( a.dist(b) > kMidDistance)
-        {
-//            println(a + "->" + b);
-            return 30;
-        }
-        return 15;
+      stroke(getColor(vertex));
+      point(x, y);
+      x++;
     }
+    return x;
+  }
 
-    void interpolate(PVector start, PVector end)
+  void draw2D(int x, int y)
+  {
+    for (PVector vertex: mVertices)
     {
-        int count = getPixelCount(start, end);
-        float step = 1.0f / count;
-        for (int i=1;i<count;i++)
-        {
-            mVertices.add(PVector.lerp(start, end, i*step));
-        }
+      stroke(getColor(vertex));
+      point(x + vertex.x, y + vertex.y);
     }
-
-    boolean isPressed = false;
-
-    void update(Movie movie)
-    {
-        if (movie != null)
-        {
-            for (PVector vertex: mVertices)
-            {
-                vertex.z = movie.get((int)vertex.x, (int)vertex.y);
-            }
-        }
-        isPressed = pinStatus[mPin];
-    }
-
-    void update()
-    {
-        isPressed = isPinHigh(mPin);
-    }
-
-    color getColor(PVector vertex)
-    {
-        return (int)vertex.z + mButtonColor;
-    }
-
-    int draw1D(int x, int y)
-    {
-        for (PVector vertex: mVertices)
-        {
-            stroke(getColor(vertex));
-            point(x, y);
-            x++;
-        }
-        return x;
-    }
-
-    void draw2D(int x, int y)
-    {
-        for (PVector vertex: mVertices)
-        {
-            stroke(getColor(vertex));
-            point(x + vertex.x, y + vertex.y);
-        }
-    }
+  }
 }
 
