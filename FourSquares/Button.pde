@@ -1,3 +1,5 @@
+import de.looksgood.ani.*;
+
 //Button has several vertices, intepolated from parent Region's VertexData
 class Button
 {
@@ -63,12 +65,7 @@ class Button
         vertex.z = movie.get((int)vertex.x, (int)vertex.y);
       }
     }
-    isPressed = pinStatus[mPin];
-  }
-
-  void update()
-  {
-    isPressed = isPinHigh(mPin);
+    isPressed = pinHit[mPin];
   }
 
   color getColor(PVector vertex)

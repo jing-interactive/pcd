@@ -31,10 +31,10 @@ void setupRegion()
 
     // audio
     String[] filenames = listFileNames(folderName + "/audio/");
-    for (int i=0; i<filenames.length; i++)
+    for (int k=0; k<filenames.length; k++)
     {
-      regions[i].addAudio(folderName + "/audio/" + filenames[i]);
-      if (!isLoadingAllAudio && i > filenames.length/2)
+      regions[i].addAudio(folderName + "/audio/" + filenames[k]);
+      if (!isLoadingAllAudio && k > filenames.length/2)
       {
         break;
       }
@@ -62,6 +62,8 @@ void setup()
   size(800, 600);
   noFill();
 
+  Ani.init(this);
+
   setupAudio();
   setupGUI();
   setupArduino();
@@ -71,6 +73,8 @@ void setup()
 void draw()
 {
   background(0);
+
+  threadArduino();
 
   int idx=0;
   noFill();

@@ -1,3 +1,3 @@
 boolean isLoadingAllVideo = false;
-boolean isLoadingAllAudio = false;
+boolean isLoadingAllAudio = true;
 boolean isPlayingBgMusic = false;

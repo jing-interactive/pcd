@@ -45,16 +45,23 @@ class Region
 
   // audio
   ArrayList<AudioPlayer> mAudios = new ArrayList<AudioPlayer>();
-  AudioPlayer mCurrentAudio, mPrevAudio;
+  int mCurrentAudio = -1;
+  float[] mGains = new float[100]; // HACK:
+
+  void fadeOut(int audioId)
+  {
+    Ani.to(this, -60, "mGains[" + audioId + "]", 0.5f);
+    println("fadeOut: "+audioId);
+  }
 
   void addAudio(String filename)
   {
     mAudios.add(minim.loadFile(filename));
   }
 
-  AudioPlayer getRandomAudio()
+  int getRandomAudio()
   {
-    return mAudios.get((int)random(mAudios.size()));
+    return (int)random(mAudios.size());
   }
 
   //
@@ -63,7 +70,6 @@ class Region
     if (mCurrentMovie != null && mCurrentMovie.available())
     {
       mCurrentMovie.read();
-      //            mCurrentMovie.loadPixels();
     }
 
     boolean isRegionPressed = false;
@@ -80,41 +86,53 @@ class Region
 
   void updateRegion(boolean isPressed)
   {
+    if (mCurrentMovie != null && mCurrentMovie.time() >= mCurrentMovie.duration())
+    {
+      mCurrentMovie = null;
+    }
+
     if (isPressed)
     {
-      if (mCurrentMovie == null || mCurrentMovie.time() >= mCurrentMovie.duration())
+      if (mCurrentMovie == null)
       {
         mCurrentMovie = getRandomVideo();
         mCurrentMovie.stop();
         mCurrentMovie.play();
       }
     }
-
-    if (mCurrentMovie != null && mCurrentMovie.time() >= mCurrentMovie.duration())
-    {
-      mCurrentMovie = null;
-    }
   }
 
   void updateButton(boolean isPressed)
   {
-    if (isPressed)
+    // zeroness
+    if (mCurrentAudio != -1 && mAudios.get(mCurrentAudio).position() >= mAudios.get(mCurrentAudio).length())
     {
-      if (mPrevAudio != null)
-      {
-        mPrevAudio = null;
-      }
-      if (mCurrentAudio == null)
-      {
-        mCurrentAudio = getRandomAudio();
-        mCurrentAudio.rewind();
-        mCurrentAudio.play();
-      }
+      mCurrentAudio = -1;
     }
 
-    if (mCurrentAudio != null && mCurrentAudio.position() >= mCurrentAudio.length())
+    if (isPressed)
     {
-      mCurrentAudio = null;
+      if (mCurrentAudio != -1)
+      {
+        fadeOut(mCurrentAudio);
+      }
+      int audio = getRandomAudio();
+      if (audio == mCurrentAudio)
+      {
+        audio = (mCurrentAudio + 1) % mAudios.size();
+      }
+      mCurrentAudio = audio;
+      // TODO
+      mGains[mCurrentAudio] = 0;
+      mAudios.get(mCurrentAudio).rewind();
+      mAudios.get(mCurrentAudio).play();
+    }
+
+    int id = 0;
+    for (AudioPlayer audio: mAudios)
+    {
+      audio.setGain(mGains[id]);
+      id++;
     }
   }
 
