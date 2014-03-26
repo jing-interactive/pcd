@@ -38,7 +38,6 @@ class Button
     final int kMidDistance = 30;
     if ( a.dist(b) > kMidDistance)
     {
-      //            println(a + "->" + b);
       return 30;
     }
     return 15;
@@ -54,7 +53,41 @@ class Button
     }
   }
 
+  float mRed, mGreen, mBlue;
+  float mAlpha;
+
+  void fadeOut()
+  {
+    Ani.to(this, kButtonFadeTime, "mAlpha", 0);
+  }
+
+  void fadeIn()
+  {
+    Ani.to(this, kButtonFadeTime, "mAlpha", 1.2);
+  }
+
+  void setColor(color clr)
+  {
+    mRed = red(clr);
+    mGreen = green(clr);
+    mBlue = blue(clr);
+  }
+
   boolean isPressed = false;
+  boolean isHit = false;
+
+  // HACK
+  void updateCenter()
+  {
+    for (PVector vertex: mVertices)
+    {
+      color clr = (color)vertex.z;
+      float r = red(clr) * centerAlpha;
+      float g = green(clr) * centerAlpha;
+      float b = blue(clr) * centerAlpha;
+      vertex.z = color((int)r, (int)g, (int)b);
+    }
+  }
 
   void update(Movie movie)
   {
@@ -65,12 +98,38 @@ class Button
         vertex.z = movie.get((int)vertex.x, (int)vertex.y);
       }
     }
-    isPressed = pinHit[mPin];
+  }
+
+  // TODO
+  void updateArduino()
+  {
+    boolean high = isPinHigh(mPin);
+    if (!isPressed && high)
+    {
+      isHit = true;
+      fadeIn();
+    }
+    else
+    {
+      isHit = false;
+    }
+
+    if (!high)
+    {
+      fadeOut();
+    }
+    isPressed = high;
   }
 
   color getColor(PVector vertex)
   {
-    return (int)vertex.z + mButtonColor;
+    color clr = (color)vertex.z;
+
+    float r = blue(clr) * 0.6 + mRed*mAlpha;
+    float g = green(clr) * 0.6 + mGreen*mAlpha;
+    float b = red(clr) * 0.6 + mBlue*mAlpha;
+
+    return color(r, g, b);
   }
 
   int draw1D(int x, int y)
@@ -91,6 +150,31 @@ class Button
       stroke(getColor(vertex));
       point(x + vertex.x, y + vertex.y);
     }
+
+    drawArduino(x, y);
+  }
+
+  void drawArduino(float x, float y)
+  {
+    color high = color(255, 0, 0);
+    color off = color(4, 79, 111);
+    color on = color(84, 145, 158);
+    int x0 = 730;
+    stroke(on);
+
+    if (isHit) 
+    {
+      fill(high);
+      rect(x0 + 50, 20+mPin*20, 10, 10);
+    }
+
+    if (isPressed)
+      fill(on);
+    else
+      fill(off);
+    rect(x0 + 30, 20+mPin*20, 10, 10);
+    fill(on);
+    text("S"+mPin, x0+4, 10+20*(1+mPin));
   }
 }
 

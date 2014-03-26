@@ -28,6 +28,8 @@ class Region
   }
 
   VertexData mVertexData;
+  ArrayList<Button> mButtons = new ArrayList<Button>();
+  boolean mIsActivated = false;
 
   // video
   ArrayList<Movie> mMovies = new ArrayList<Movie>();
@@ -48,10 +50,34 @@ class Region
   int mCurrentAudio = -1;
   float[] mGains = new float[100]; // HACK:
 
-  void fadeOut(int audioId)
+  void fadeOutAudio(int audioId)
   {
-    Ani.to(this, -60, "mGains[" + audioId + "]", 0.5f);
-    println("fadeOut: "+audioId);
+    Ani.to(this, kAudioFadeTime, "mGains[" + audioId + "]", -60);
+//    println("fadeOut: "+audioId);
+  }
+
+  void fadeOut()
+  {
+    for (Button button: mButtons)
+    {
+      button.fadeOut();
+    }
+  }
+
+  void fadeIn()
+  {
+    for (Button button: mButtons)
+    {
+      button.fadeOut();
+    }
+  }
+
+  void setColor(color clr)
+  {
+    for (Button button: mButtons)
+    {
+      button.setColor(clr);
+    }
   }
 
   void addAudio(String filename)
@@ -64,6 +90,27 @@ class Region
     return (int)random(mAudios.size());
   }
 
+  // HACK
+  void updateCenter()
+  {
+    if (mCurrentMovie == null)
+    {
+      mCurrentMovie = getRandomVideo(); // TODO
+      mCurrentMovie.loop();
+    }
+
+    if (mCurrentMovie.available())
+    {
+      mCurrentMovie.read();
+    }
+
+    for (Button button: mButtons)
+    {
+      button.update(mCurrentMovie);
+      button.updateCenter();
+    }
+  }
+
   //
   void update()
   {
@@ -73,15 +120,27 @@ class Region
     }
 
     boolean isRegionPressed = false;
+    boolean isRegionHit = false;
 
     for (Button button: mButtons)
     {
       button.update(mCurrentMovie);
+      button.updateArduino();
       isRegionPressed = isRegionPressed || button.isPressed;
+      isRegionHit = isRegionHit || button.isHit;
     }
 
-    updateRegion(isRegionPressed);
-    updateButton(isRegionPressed);
+    updateRegion(isRegionHit);
+    updateButton(isRegionHit);
+
+    if (mCurrentMovie != null || isRegionPressed)
+    {
+      mIsActivated = true;
+    }
+    else
+    {
+      mIsActivated = false;
+    }
   }
 
   void updateRegion(boolean isPressed)
@@ -114,7 +173,7 @@ class Region
     {
       if (mCurrentAudio != -1)
       {
-        fadeOut(mCurrentAudio);
+        fadeOutAudio(mCurrentAudio);
       }
       int audio = getRandomAudio();
       if (audio == mCurrentAudio)
@@ -145,7 +204,7 @@ class Region
 
     if (mCurrentMovie != null)
     {
-      text(mCurrentMovie.time(), x, y);
+      text(mCurrentMovie.time(), x + 50, y);
     }
   }
 
@@ -190,6 +249,5 @@ class Region
     printArray(mButtons);
     print("\n");
   }
-  ArrayList<Button> mButtons = new ArrayList<Button>();
 }
 

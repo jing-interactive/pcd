@@ -9,7 +9,7 @@ void setupAudio()
 
   if (isPlayingBgMusic)
   {
-    bgSnd = minim.loadFile("center/audio/ophelia.mp3");
+    bgSnd = minim.loadFile("center/audio/Super Nature.mp3");
     bgSnd.loop();
     bgSnd.play();
   }
