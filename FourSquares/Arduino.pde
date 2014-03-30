@@ -13,7 +13,7 @@ void setupArduino()
 
   if (Arduino.list().length == 0) return;
 
-  arduino = new Arduino(this, Arduino.list()[0], 57600);
+  arduino = new Arduino(this, Arduino.list()[1], 57600);
 
   for (int i = 0; i < kPinCount; i++)
   {

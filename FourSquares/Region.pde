@@ -53,7 +53,7 @@ class Region
   void fadeOutAudio(int audioId)
   {
     Ani.to(this, kAudioFadeTime, "mGains[" + audioId + "]", -60);
-//    println("fadeOut: "+audioId);
+    //    println("fadeOut: "+audioId);
   }
 
   void fadeOut()
@@ -111,29 +111,34 @@ class Region
     }
   }
 
+  boolean mIsPressed;
+  boolean mIsHit;
+
+  int mAnimType = 0;
+
   //
   void update()
   {
+    mIsPressed = false;
+    mIsHit = false;
+
     if (mCurrentMovie != null && mCurrentMovie.available())
     {
       mCurrentMovie.read();
     }
 
-    boolean isRegionPressed = false;
-    boolean isRegionHit = false;
-
     for (Button button: mButtons)
     {
       button.update(mCurrentMovie);
       button.updateArduino();
-      isRegionPressed = isRegionPressed || button.isPressed;
-      isRegionHit = isRegionHit || button.isHit;
+      if (button.isPressed) mIsPressed = true;
+      if (button.isHit) mIsHit = true;
     }
 
-    updateRegion(isRegionHit);
-    updateButton(isRegionHit);
+    updateRegion();
+    updateButton();
 
-    if (mCurrentMovie != null || isRegionPressed)
+    if (mCurrentMovie != null || mIsPressed)
     {
       mIsActivated = true;
     }
@@ -143,14 +148,15 @@ class Region
     }
   }
 
-  void updateRegion(boolean isPressed)
+  void updateRegion()
   {
     if (mCurrentMovie != null && mCurrentMovie.time() >= mCurrentMovie.duration())
     {
       mCurrentMovie = null;
     }
 
-    if (isPressed)
+    if ((mAnimType == 0 && mIsHit) ||
+      (mAnimType == 1 && mIsPressed))
     {
       if (mCurrentMovie == null)
       {
@@ -161,7 +167,7 @@ class Region
     }
   }
 
-  void updateButton(boolean isPressed)
+  void updateButton()
   {
     // zeroness
     if (mCurrentAudio != -1 && mAudios.get(mCurrentAudio).position() >= mAudios.get(mCurrentAudio).length())
@@ -169,7 +175,7 @@ class Region
       mCurrentAudio = -1;
     }
 
-    if (isPressed)
+    if (mIsHit)
     {
       if (mCurrentAudio != -1)
       {

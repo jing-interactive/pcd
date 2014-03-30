@@ -63,7 +63,7 @@ class Button
 
   void fadeIn()
   {
-    Ani.to(this, kButtonFadeTime, "mAlpha", 1.2);
+    Ani.to(this, kButtonFadeTime, "mAlpha", 2);
   }
 
   void setColor(color clr)
@@ -73,6 +73,7 @@ class Button
     mBlue = blue(clr);
   }
 
+  float mLastHitMillis;
   boolean isPressed = false;
   boolean isHit = false;
 
@@ -107,6 +108,7 @@ class Button
     if (!isPressed && high)
     {
       isHit = true;
+      mLastHitMillis = millis();
       fadeIn();
     }
     else
@@ -124,10 +126,10 @@ class Button
   color getColor(PVector vertex)
   {
     color clr = (color)vertex.z;
-
-    float r = blue(clr) * 0.6 + mRed*mAlpha;
-    float g = green(clr) * 0.6 + mGreen*mAlpha;
-    float b = red(clr) * 0.6 + mBlue*mAlpha;
+    float a = 0.8; 
+    float r = red(clr) * a + mRed*mAlpha;
+    float g = green(clr) * a + mGreen*mAlpha;
+    float b = blue(clr) * a + mBlue*mAlpha;
 
     return color(r, g, b);
   }

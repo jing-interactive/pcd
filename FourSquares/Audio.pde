@@ -9,7 +9,7 @@ void setupAudio()
 
   if (isPlayingBgMusic)
   {
-    bgSnd = minim.loadFile("center/audio/Super Nature.mp3");
+    bgSnd = minim.loadFile("centre/audio/Super Nature.mp3");
     bgSnd.loop();
     bgSnd.play();
   }

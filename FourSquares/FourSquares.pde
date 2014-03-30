@@ -11,11 +11,29 @@ String[] regionNames =
 
 color[] regionColors =
 {
-  color(0, 233, 254), 
-  color(247, 202, 0), 
-  color(9, 230, 168), 
-  color(70, 0, 198), 
+  color(255, 235, 0), 
+  color(0, 210, 255), 
+  color(185, 255, 10), 
+  color(255, 0, 90), 
   color(0, 0, 0),
+};
+
+int[] animTypes =
+{
+  0, 
+  0, 
+  0, 
+  0, 
+  0
+};
+
+int[] yPos =
+{
+  60,
+  4,
+  30,
+  0,
+  50
 };
 
 Region[] regions = new Region[regionNames.length];
@@ -27,8 +45,9 @@ void setupRegion()
   {
     regions[i] = new Region(regionNames[i]);
     regions[i].setColor(regionColors[i]);
-
-    String folderName = sketchPath + "/data/" + regionNames[i];
+    regions[i].mAnimType = animTypes[i];
+    
+      String folderName = sketchPath + "/data/" + regionNames[i];
     // video
     for (String filename: listFileNames(folderName + "/video/"))
     {
@@ -76,7 +95,7 @@ void setup()
 {
   self = this;
 
-  size(800, 600);
+  size(displayWidth, displayHeight);
   noFill();
 
   Ani.init(this);
@@ -102,7 +121,7 @@ void draw()
     Region region = regions[idx];
     region.update();
     isRegionActivated = isRegionActivated || region.mIsActivated;
-    region.draw1D(10, 10+idx*10);
+    region.draw1D(0, yPos[idx]);
     region.draw2D(150 * idx, 200);
     text(regionNames[idx], 150 * idx + 50, 180);
   }
@@ -131,7 +150,7 @@ void drawCenter()
   center.updateCenter();
 
   text(regionNames[idx], 150 * idx + 50, 180);
-  center.draw1D(10, 10+idx*10);
+  center.draw1D(0, yPos[idx]);
   center.draw2D(150 * idx, 200);
 }
 
