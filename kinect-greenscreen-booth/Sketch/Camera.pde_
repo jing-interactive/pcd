@@ -1,0 +1,109 @@
+import processing.video.*;
+
+boolean isRealCamera = false;
+Capture cam;
+PImage fakeCam, clip;
+
+int x1 = 0, y1 = 0;
+int x2 = 1920, y2 = 1080;
+
+void setupCamera()
+{
+  println("opening camera");
+
+  String[] cameras = Capture.list();
+  printArray(cameras);
+  for (String cam : cameras)
+  {
+    if (cam.contains(kCamName))
+    {
+      println("real camera");
+      isRealCamera = true;
+      break;
+    }
+  }
+
+  if (!isRealCamera)
+  {
+    fakeCam = loadImage("fakeCam.jpg");
+    println("fake camera");
+
+    return;
+  }
+
+  try
+  {
+    cam = new Capture(this, kCamWidth, kCamHeight, kCamName, 30);
+    cam.start();
+    while (!cam.available ())
+    {
+      println("Waiting for camera to be available.");
+      delay(100);
+    }
+    cam.read();
+  }
+  catch (Exception e)
+  {
+    println("Failed to find camera");
+  }
+}
+
+//void drawCamera(boolean clipped)
+//{
+//  drawCamera_(clipped, true);
+//}
+
+void drawCamera(boolean clipped)
+{
+  if (isRealCamera)
+  {
+    if (cam.available())
+    {
+      cam.read();
+      if (clipped)
+      {
+        if (clip == null)
+        {
+          clip = cam.get();
+        }
+        clip.copy(cam, x1, y1, x2, y2, 0, 0, cam.width, cam.height);
+      }
+    }
+  } else
+  {
+    if (clipped)
+    {
+      if (clip == null)
+      {
+        clip = fakeCam.get();
+      }
+      clip.copy(fakeCam, x1, y1, x2, y2, 0, 0, fakeCam.width, fakeCam.height);
+    }
+  }
+  imageMode(CENTER);
+  pushMatrix();
+  translate(width/2, height/2);
+  scale(1, -1);
+  if (clipped)
+  {
+    image(clip, 0, 0, width, height);
+    //    imageRoi(isRealCamera ? cam : fakeCam, x1, y1, x2, y2);
+  } else
+  {
+    image(isRealCamera ? cam : fakeCam, 0, 0, width, height);
+  }
+  popMatrix();
+  imageMode(CORNERS);
+}
+
+void drawRealtimeCam()
+{
+  image(backImages.get(greenBg));
+
+  useShader();
+  drawCamera(true);
+  resetShader();
+
+  image(isBackWordBlack.get(greenBg) ? images.get("word_black") : images.get("word_white"));
+}
+

@@ -1,0 +1,16 @@
+{
+  "CFG_weight_B": {"value": "0.90909094"},
+  "CFG_y1": {"value": "0.0"},
+  "CFG_thresh": {"value": "0.26242426"},
+  "CFG_x1": {"value": "0.1"},
+  "CFG_y2": {"value": "1.0"},
+  "CFG_x2": {"value": "0.9"},
+  "CFG_slope": {"value": "0.22222222"},
+  "CFG_background_B": {"value": "136.51515"},
+  "CFG_Player_Only": {"value": "true"},
+  "CFG_weight_G": {"value": "0.72727275"},
+  "CFG_SWITCH_INTRO_SECONDS": {"value": "5.0"},
+  "CFG_weight_R": {"value": "1.030303"},
+  "CFG_background_G": {"value": "255.0"},
+  "CFG_background_R": {"value": "28.333334"}
+}
