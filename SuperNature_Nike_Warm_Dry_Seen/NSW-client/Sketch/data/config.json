@@ -1,0 +1,7 @@
+{
+  "CFG_DRY_DAMPING": {"value": "0.2"},
+  "CFG_DRY_DRAGGING": {"value": "0.0055"},
+  "CFG_SWITCH_IDLE_SECONDS": {"value": "5.4040403"},
+  "CFG_WARM_DRAGGING": {"value": "1.1818182E-4"},
+  "CFG_SWITCH_MENU_SECONDS": {"value": "10.0"}
+}

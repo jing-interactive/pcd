@@ -1,0 +1,14 @@
+{
+  "CFG_SEEN_RAIN_VY_MAX": {"value": "82.72727"},
+  "CFG_SEEN_RAIN_DURATION_MAX": {"value": "2.6363637"},
+  "CFG_SEEN_RAIN_DURATION_MIN": {"value": "1.969697"},
+  "CFG_WARM_G": {"value": "255.0"},
+  "CFG_DRY_B": {"value": "255.0"},
+  "CFG_DRY_A": {"value": "255.0"},
+  "CFG_DRY_R": {"value": "255.0"},
+  "CFG_WARM_B": {"value": "255.0"},
+  "CFG_WARM_A": {"value": "255.0"},
+  "CFG_WARM_R": {"value": "255.0"},
+  "CFG_SEEN_RAIN_VY_MIN": {"value": "40.90909"},
+  "CFG_DRY_G": {"value": "255.0"}
+}
