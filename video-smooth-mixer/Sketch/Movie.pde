@@ -16,7 +16,7 @@ void stopMovie(Movie movie) {
 void drawMovie(Movie movie, float x, float y, float w, float h) {
     if (movie == null) return;
 
-    // println("moviw.time(): " + movie.time());
+    // println("movie.time(): " + movie.time());
     if (movie.available()) {
         movie.read();
     }
